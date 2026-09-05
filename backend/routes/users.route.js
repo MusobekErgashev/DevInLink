@@ -1,4 +1,10 @@
-const { Router } = require("express")
-const router = Router()
+const { Router } = require("express");
+const router = Router();
+const userController = require('../controllers/user.controller');
+const { protect } = require('../middlewares/auth.middleware');
 
-module.exports = router
+router.get('/', userController.getAll);
+router.get('/me', protect, userController.getMe);
+router.get('/:username', userController.getByUsername);
+
+module.exports = router;
