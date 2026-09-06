@@ -2,11 +2,18 @@ const pool = require('../config/db');
 const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require('../utils/jwt');
 const { hashPassword, comparePassword } = require('../utils/password');
 const { accessTokenCookieOptions, refreshTokenCookieOptions } = require('../utils/cookie');
+const authValidate = require('../validations/auth.validation');
 
 class AuthController {
     // register
 
     async register(req, res) {
+        const validationResult = authValidate.register.validate(req.body);
+
+        if (validationResult.error) {
+            return res.status(400).json({ message: validationResult.error.message });
+        }
+
         const { username, first_name, last_name, email, password_hash } = req.body;
 
         if (!username || !first_name || !last_name || !email || !password_hash) {

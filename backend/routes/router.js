@@ -2,7 +2,7 @@ const { Router } = require("express")
 const router = Router()
 
 router.use('/users', require('./users.route'))
-router.use('/tech', require('./technologies.route'))
+router.use('/technologies', require('./technologies.route'))
 router.use('/soft-skills', require('./soft-skills.route'))
 router.use('/portfolio', require('./portfolio.route'))
 router.use('/experience', require('./experience.route'))
