@@ -73,6 +73,19 @@ class AuthController {
         res.status(200).json({ user: userData, accessToken, refreshToken });
     }
 
+    // delete account
+
+    async deleteAccount(req, res) {
+        try {
+            const { id } = req.user;
+            await pool.query('DELETE FROM users WHERE id = $1', [id]);
+            res.status(200).json({ message: "Foydalanuvchi o'chirildi!" });
+        } catch (error) {
+            console.error("deleteAccount error:", error);
+            res.status(500).json({ message: "Serverda xatolik yuz berdi!" });
+        }
+    }
+
     // logout
 
     async logout(req, res) {
