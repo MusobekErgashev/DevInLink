@@ -36,15 +36,15 @@ class TechnologyController {
         try {
             const userId = req.user.id;
             const { id } = req.params;
-            const { name, icon } = req.body;
+            const { name } = req.body;
             
-            if (!name || !icon) {
-                return res.status(400).json({ message: "Name and icon are required!" });
+            if (!name) {
+                return res.status(400).json({ message: "Name is required!" });
             }
 
             const updatedTechnology = await pool.query(
-                "UPDATE technologies SET name = $1, icon = $2 WHERE id = $3 AND user_id = $4 RETURNING *",
-                [name, icon, id, userId]
+                "UPDATE technologies SET name = $1 WHERE id = $2 AND user_id = $3 RETURNING *",
+                [name, id, userId]
             );
 
             if (updatedTechnology.rows.length === 0) {

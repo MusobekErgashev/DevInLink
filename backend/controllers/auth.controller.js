@@ -20,7 +20,7 @@ class AuthController {
             return res.status(400).json({ message: "Barcha maydonlar to'ldirilishi shart!" });
         }
 
-        const userExist = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        const userExist = await pool.query('SELECT * FROM users WHERE email = $1 or username = $2', [email, username]);
 
         if (userExist.rows.length > 0) {
             return res.status(400).json({ message: "Bu foydalanuvchi allaqachon ro'yxatdan o'tgan!" });
@@ -39,7 +39,7 @@ class AuthController {
         res.cookie('accessToken', accessToken, accessTokenCookieOptions);
         res.cookie('refreshToken', refreshToken, refreshTokenCookieOptions);
 
-        res.status(201).json({ user: userData, accessToken, refreshToken });
+        res.status(201).json({ userData });
     }
 
     // login
@@ -52,13 +52,13 @@ class AuthController {
         }
 
         if (!password_hash) {
-            return res.status(400).json({ message: "Password kiriting!" });
+            return res.status(400).json({ message: "Parol kiriting!" });
         }
 
         const user = await pool.query("SELECT * FROM users WHERE email = $1 OR username = $2", [email, username]);
 
         if (user.rows.length === 0) {
-            return res.status(400).json({ message: "Bunday foydalanuvchi mavjud emas!" });
+            return res.status(400).json({ message: "Login yoki parol noto'g'ri!" });
         }
 
         const userData = user.rows[0];
@@ -68,7 +68,7 @@ class AuthController {
         delete userData.password_hash;
 
         if (!isMatch) {
-            return res.status(400).json({ message: "Parol noto'g'ri!" });
+            return res.status(400).json({ message: "Login yoki parol noto'g'ri!" });
         }
 
         const accessToken = generateAccessToken(userData.id);
@@ -77,7 +77,7 @@ class AuthController {
         res.cookie('accessToken', accessToken, accessTokenCookieOptions);
         res.cookie('refreshToken', refreshToken, refreshTokenCookieOptions);
 
-        res.status(200).json({ user: userData, accessToken, refreshToken });
+        res.status(200).json({ userData });
     }
 
     // delete account

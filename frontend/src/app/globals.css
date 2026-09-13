@@ -1,26 +1,69 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Colors */
+  --color-primary: #ffffff;
+  --color-secondary: #94a3b8;
+  --color-background: #08090e;
+  --color-panel: #0d0f17;
+  --color-panel-hover: #121522;
+  --color-grid-line: rgba(255, 255, 255, 0.12);
+  --color-grid-line-bright: rgba(255, 255, 255, 0.25);
+  --color-accent: #6366f1;
+
+  /* Font families */
+  --font-space-grotesk: var(--font-space-grotesk), sans-serif;
+  --font-inter: var(--font-inter), sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-radius: 0px !important;
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  scroll-behavior: smooth;
+  background-color: var(--color-background);
+  color: #e2e8f0;
+  font-family: var(--font-inter);
+}
+
+/* Custom Wireframe Line Grid Utility Classes */
+.grid-line-border {
+  border: 1px solid var(--color-grid-line);
+}
+
+.grid-line-t {
+  border-top: 1px solid var(--color-grid-line);
+}
+
+.grid-line-b {
+  border-bottom: 1px solid var(--color-grid-line);
+}
+
+.grid-line-l {
+  border-left: 1px solid var(--color-grid-line);
+}
+
+.grid-line-r {
+  border-right: 1px solid var(--color-grid-line);
+}
+
+/* Custom Scrollbar for wireframe theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #08090e;
+  border-left: 1px solid var(--color-grid-line);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #272a3b;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #404663;
 }
