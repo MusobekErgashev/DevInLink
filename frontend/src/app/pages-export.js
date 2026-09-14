@@ -1,4 +1,4 @@
-import { Bell, Cog, Compass, Quote } from "lucide-react";
+import { Bell, Cog, Compass, MessageCircleCode, Quote } from "lucide-react";
 
 export const pages = [
     {
@@ -15,9 +15,9 @@ export const pages = [
     },
     {
         id: 3,
-        title: "Notification",
-        path: "/notification",
-        icon: <Bell size={24} />
+        title: "Community",
+        path: "/community",
+        icon: <MessageCircleCode size={24} />
     },
     {
         id: 4,

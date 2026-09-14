@@ -4,7 +4,11 @@ class TechnologyController {
     async getAll(req, res) {
         try {
             const technologies = await pool.query('SELECT * FROM technologies');
-            res.status(200).json(technologies.rows);
+            const technology_summary = await pool.query('SELECT technology_summary FROM users')
+            res.status(200).json({
+                ...technologies.rows,
+                ...technology_summary.rows
+            });
         } catch (error) {
             console.error("Technology getAll error:", error);
             res.status(500).json({ message: "Serverda xatolik yuz berdi!" });
@@ -14,15 +18,15 @@ class TechnologyController {
     async create(req, res) {
         try {
             const userId = req.user.id;
-            const { name, icon } = req.body;
+            const { name } = req.body;
 
-            if (!name || !icon) {
-                return res.status(400).json({ message: "Name and icon are required!" });
+            if (!name) {
+                return res.status(400).json({ message: "Name is required!" });
             }
 
             const newTechnology = await pool.query(
-                "INSERT INTO technologies (user_id, name, icon) VALUES ($1, $2, $3) RETURNING *",
-                [userId, name, icon]
+                "INSERT INTO technologies (user_id, name) VALUES ($1, $2) RETURNING id, name",
+                [userId, name]
             );
 
             res.status(201).json(newTechnology.rows[0]);
@@ -43,7 +47,7 @@ class TechnologyController {
             }
 
             const updatedTechnology = await pool.query(
-                "UPDATE technologies SET name = $1 WHERE id = $2 AND user_id = $3 RETURNING *",
+                "UPDATE technologies SET name = $1 WHERE id = $2 AND user_id = $3 RETURNING id, name",
                 [name, id, userId]
             );
 
@@ -64,7 +68,7 @@ class TechnologyController {
             const { id } = req.params;
             
             const deletedTechnology = await pool.query(
-                "DELETE FROM technologies WHERE id = $1 AND user_id = $2 RETURNING *",
+                "DELETE FROM technologies WHERE id = $1 AND user_id = $2 RETURNING id, name",
                 [id, userId]
             );
 

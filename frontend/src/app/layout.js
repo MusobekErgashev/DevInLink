@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
       <body className="flex w-full h-screen bg-background text-slate-100 overflow-hidden font-inter">
         <Toaster position="top-center" toastOptions={{ style: { borderRadius: '0px', background: '#0D0F17', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' } }} />
         <Menu />
-        <main className="h-full w-full flex-1 flex flex-col min-w-0 overflow-y-auto bg-background">
+        <main className="h-full w-full flex-1 flex flex-col min-w-0 overflow-y-auto">
           {children}
         </main>
       </body>

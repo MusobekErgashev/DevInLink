@@ -38,7 +38,7 @@ const Menu = () => {
         {isOpen ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
       </button>
 
-      <div className={`flex items-center h-16 px-4 border-b border-white/12 bg-[#0e101b] pt-2`}>
+      <div className={`flex items-center h-16 px-4 border-b border-white/12 bg-[#0e101b]`}>
         <Link href="/explore" className={`flex items-center ${isOpen ? '' : 'mx-auto'} gap-2 overflow-hidden`}>
           <div className="flex items-center justify-center shrink-0">
             <Image src="/favicon.ico" alt="Logo Icon" width={35} height={35} className="object-contain" />

@@ -39,7 +39,7 @@ class AuthController {
         res.cookie('accessToken', accessToken, accessTokenCookieOptions);
         res.cookie('refreshToken', refreshToken, refreshTokenCookieOptions);
 
-        res.status(201).json({ userData });
+        res.status(201).json({ message: `"${userData.username}" foydalanuvchi tizimdan muvaffaqiyatli ro'yxatdan o'tdi!` });
     }
 
     // login
@@ -77,7 +77,7 @@ class AuthController {
         res.cookie('accessToken', accessToken, accessTokenCookieOptions);
         res.cookie('refreshToken', refreshToken, refreshTokenCookieOptions);
 
-        res.status(200).json({ userData });
+        res.status(200).json({ message: `"${userData.username}" foydalanuvchi tizimga muvaffaqiyatli kirdi!` });
     }
 
     // delete account
@@ -127,7 +127,7 @@ class AuthController {
             res.cookie('accessToken', newAccessToken, accessTokenCookieOptions);
             res.cookie('refreshToken', newRefreshToken, refreshTokenCookieOptions);
 
-            return res.status(200).json({ user: userData, accessToken: newAccessToken, refreshToken: newRefreshToken });
+            return res.status(200).json({ message: "Yangi tokenlar berildi!" });
         } catch (error) {
             return res.status(401).json({ message: "Refresh token yaroqsiz yoki muddati o'tgan!" });
         }
