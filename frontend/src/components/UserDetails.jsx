@@ -2,9 +2,8 @@
 
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { Briefcase, GraduationCap, Code2, MapPin, Calendar, Share2, ExternalLink, Globe, Send, Sparkles, Check, Building2, Layers, Award, Terminal, Cpu, FileCode2, Mail, Clock, BookOpen, User, Phone, Video, Camera, AtSign, ChevronLeft, } from 'lucide-react'
+import { Briefcase, MapPin, Calendar, Share2, Check, Award, Mail, ChevronLeft, } from 'lucide-react'
 import api from '@/api/axios'
-import Link from 'next/link'
 import { useParams, useSearchParams, useRouter } from 'next/navigation'
 import ShowPhoneModal from './ShowPhoneModal'
 import GitHubStats from './stats/GithubStats'
@@ -113,11 +112,10 @@ export default function UserDetails({ username: propUsername }) {
           <div className="flex items-start sm:items-center gap-5">
             <div className="relative w-24 h-24 sm:w-28 sm:h-28 border-2 border-indigo-500/60 bg-[#06070b] shrink-0 flex items-center justify-center">
               {user?.avatar ? (
-                <Image
+                <img
                   src={user?.avatar}
                   alt={formattedName}
-                  fill
-                  className="object-cover"
+                  className="object-cover w-full h-full"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-indigo-950/60 text-indigo-300 font-mono font-bold text-3xl">

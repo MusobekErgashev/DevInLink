@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const supabase = require('../config/supabase');
 
 class UserController {
     async getMe(req, res) {
@@ -220,6 +221,50 @@ class UserController {
 
         } catch (error) {
             res.status(500).json({ message: "Serverda xatolik yuz berdi!" });
+        }
+    }
+
+    async updateAvatar(req, res) {
+        try {
+            const file = req.file;
+            const userId = req.user.id;
+
+            if (!file) {
+                return res.status(400).json({ message: 'Rasm fayli yuklanmadi.' });
+            }
+
+            const fileExt = file.originalname.split('.').pop();
+            const fileName = `user-${userId}-${Date.now()}.${fileExt}`;
+            const filePath = `avatars/${fileName}`;
+
+            const { data, error: uploadError } = await supabase.storage
+                .from('avatars')
+                .upload(filePath, file.buffer, {
+                    contentType: file.mimetype,
+                    upsert: true
+                });
+
+            if (uploadError) {
+                return res.status(500).json({ message: uploadError.message });
+            }
+
+            const { data: publicUrlData } = supabase.storage
+                .from('avatars')
+                .getPublicUrl(filePath);
+
+            const publicUrl = publicUrlData.publicUrl;
+
+            const query = 'UPDATE users SET avatar = $1 WHERE id = $2 RETURNING id, avatar';
+            const result = await pool.query(query, [publicUrl, userId]);
+
+            return res.status(200).json({
+                message: 'Avatar muvaffaqiyatli yangilandi',
+                avatar: publicUrl,
+                user: result.rows[0]
+            });
+
+        } catch (error) {
+            return res.status(500).json({ message: 'Serverda xatolik yuz berdi.' });
         }
     }
 }

@@ -110,11 +110,9 @@ const Explore = () => {
 
               <div className="relative w-20 h-20 sm:w-20 sm:h-20 border-2 border-indigo-500/50 bg-[#06070b] shrink-0 flex items-center justify-center overflow-hidden">
                 {user.avatar ? (
-                  <Image
+                  <img
                     src={user.avatar}
                     alt={formattedName}
-                    width={80}
-                    height={80}
                     className="object-cover w-full h-full"
                   />
                 ) : (
