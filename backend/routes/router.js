@@ -10,6 +10,7 @@ router.use('/education', require('./education.route'))
 router.use('/awards', require('./awards.route'))
 router.use('/quotes', require('./quotes.route'))
 router.use('/languages', require('./language.route'))
+router.use('/leetcode', require('./leetcode.route'))
 router.use('/auth', require('./auth.route'))
 
 module.exports = router

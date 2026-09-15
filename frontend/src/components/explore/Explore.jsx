@@ -47,10 +47,16 @@ const Explore = () => {
         setError(error.response.data.message);
       }
     }
-    const timer = setTimeout(() => {
+
+    if (query.length) {
+      const timer = setTimeout(() => {
+        fetchUsers()
+      }, 500)
+      return () => clearTimeout(timer)
+    } else {
       fetchUsers()
-    }, 500)
-    return () => clearTimeout(timer)
+    }
+
   }, [query])
 
   // Switch user to profile
@@ -175,7 +181,7 @@ const Explore = () => {
                 )}
 
                 {techList.length > 0 && (
-                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                  <div className="flex flex-wrap items-center gap-1.5">
                     {techList.map((tech, idx) => (
                       <div
                         key={tech.id || idx}

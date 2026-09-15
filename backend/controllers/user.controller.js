@@ -47,15 +47,16 @@ class UserController {
                 instagram_url,
                 youtube_url,
                 website_url,
-                telegram_url,
-                github_url,
+                telegram_username,
+                github_username,
                 about,
                 age,
                 technology_summary,
                 location,
                 job_title,
                 total_experience_years,
-                headline
+                headline,
+                leetcode_username
             } = req.body;
 
             if (!phone.startsWith('+998')) {
@@ -67,7 +68,7 @@ class UserController {
             }
 
             const updateQuery = await pool.query(
-                'UPDATE users SET first_name = $1, last_name = $2, username = $3, phone = $4, linkedin_url = $5, instagram_url = $6, youtube_url = $7, website_url = $8, telegram_url = $9, github_url = $10, about = $11, age = $12, technology_summary = $13, location = $14, job_title = $15, total_experience_years = $16, headline = $17 WHERE id = $18 RETURNING *',
+                'UPDATE users SET first_name = $1, last_name = $2, username = $3, phone = $4, linkedin_url = $5, instagram_url = $6, youtube_url = $7, website_url = $8, telegram_username = $9, github_username = $10, about = $11, age = $12, technology_summary = $13, location = $14, job_title = $15, total_experience_years = $16, headline = $17, leetcode_username = $18 WHERE id = $19 RETURNING *',
                 [
                     first_name,
                     last_name,
@@ -77,8 +78,8 @@ class UserController {
                     instagram_url,
                     youtube_url,
                     website_url,
-                    telegram_url,
-                    github_url,
+                    telegram_username,
+                    github_username,
                     about,
                     age,
                     technology_summary,
@@ -86,6 +87,7 @@ class UserController {
                     job_title?.charAt(0).toUpperCase() + job_title?.slice(1),
                     total_experience_years,
                     headline?.charAt(0).toUpperCase() + headline?.slice(1),
+                    leetcode_username,
                     req.user.id
                 ]
             );
@@ -188,8 +190,8 @@ class UserController {
                     delete userData.instagram_url;
                     delete userData.youtube_url;
                     delete userData.website_url;
-                    delete userData.telegram_url;
-                    delete userData.github_url;
+                    delete userData.telegram_username;
+                    delete userData.github_username;
                     delete userData.created_at;
                     delete userData.technology_summary;
 
