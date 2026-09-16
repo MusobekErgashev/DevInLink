@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { Briefcase, MapPin, Calendar, Share2, Check, Award, Mail, ChevronLeft, } from 'lucide-react'
 import api from '@/api/axios'
 import { useParams, useSearchParams, useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
 import ShowPhoneModal from './ShowPhoneModal'
 import GitHubStats from './stats/GithubStats'
 import LeetCodeStats from './stats/LeetcodeStats'
@@ -13,6 +14,9 @@ import ExperienceStats from './stats/ExperienceStats'
 import TechnologyStats from './stats/TechnologyStats'
 import AboutStats from './stats/AboutStats'
 import { LinkStats } from './stats/LinkStats'
+import ImageViewer from './ImageViewer'
+import PortfolioStats from './stats/PortfolioStats'
+import AwardStats from './stats/AwardStats'
 
 export default function UserDetails({ username: propUsername }) {
   const params = useParams()
@@ -25,6 +29,8 @@ export default function UserDetails({ username: propUsername }) {
   const [openPhoneModal, setOpenPhoneModal] = useState(false)
   const [leetcodeStats, setLeetcodeStats] = useState(null)
   const [leetcodeLoading, setLeetcodeLoading] = useState(false)
+
+  const [openImage, setOpenImage] = useState(false)
 
   useEffect(() => {
     let isMounted = true
@@ -115,7 +121,8 @@ export default function UserDetails({ username: propUsername }) {
                 <img
                   src={user?.avatar}
                   alt={formattedName}
-                  className="object-cover w-full h-full"
+                  onClick={() => setOpenImage(true)}
+                  className="object-cover w-full h-full cursor-pointer"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-indigo-950/60 text-indigo-300 font-mono font-bold text-3xl">
@@ -203,7 +210,7 @@ export default function UserDetails({ username: propUsername }) {
 
       {/* links */}
 
-      <LinkStats user={user} />
+      <LinkStats user={user} setOpenPhoneModal={setOpenPhoneModal} />
 
       {user?.about && (
         <AboutStats about={user?.about} />
@@ -222,6 +229,14 @@ export default function UserDetails({ username: propUsername }) {
 
         <EducationStats formatDate={formatDate} education={user?.education} />
       </section>
+
+      {/* portfolio */}
+
+      <PortfolioStats username={user?.username} formatDate={formatDate} />
+
+      {/* awards */}
+
+      <AwardStats username={user?.username} formatDate={formatDate} />
 
       {/* leetcode */}
 
@@ -243,7 +258,18 @@ export default function UserDetails({ username: propUsername }) {
         openPhoneModal && (
           <ShowPhoneModal
             onCancel={() => setOpenPhoneModal(false)}
-            message={userDetails?.contact_phone}
+            setOpenPhoneModal={setOpenPhoneModal}
+            user={user}
+            message={user?.phone}
+          />
+        )
+      }
+
+      {
+        openImage && (
+          <ImageViewer
+            onCancel={() => setOpenImage(false)}
+            src={user?.avatar}
           />
         )
       }

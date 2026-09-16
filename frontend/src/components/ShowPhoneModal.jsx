@@ -26,7 +26,7 @@ const ShowPhoneModal = ({
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-in fade-in duration-200"
+            className="fixed inset-0 z-50 flex w-full h-screen top-0 left-0 items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
             onClick={onCancel}
         >
             <div

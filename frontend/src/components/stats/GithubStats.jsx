@@ -11,13 +11,20 @@ export default function GitHubStats({ username }) {
     if (!username) return;
     let isMounted = true;
     fetch(`https://api.github.com/users/${encodeURIComponent(username)}`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`GitHub API HTTP ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data) => {
-        if (isMounted && typeof data.public_repos === "number") {
+        if (isMounted && typeof data?.public_repos === "number") {
           setRepoCount(data.public_repos);
         }
       })
-      .catch(() => { });
+      .catch(() => {
+        if (isMounted) setRepoCount(null);
+      });
     return () => {
       isMounted = false;
     };
