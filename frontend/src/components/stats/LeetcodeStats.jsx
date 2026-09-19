@@ -48,11 +48,11 @@ export default function LeetCodeStats({ leetcodeStats, leetcodeLoading }) {
                     {/* TOTAL SOLVED & RANKING */}
                     <div className="border border-white/12 bg-[#0e101c] p-4 flex flex-col justify-between gap-3 relative overflow-hidden group hover:border-amber-500/40 transition-colors">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs text-slate-400 uppercase tracking-wider">YECHILGAN MASALALAR</span>
+                            <span className="text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider">YECHILGAN MASALALAR</span>
                             <Sparkles className="w-4 h-4 text-amber-400" />
                         </div>
                         <div>
-                            <div className="text-3xl font-extrabold text-white font-mono tracking-tight">
+                            <div className="text-2xl font-extrabold text-white font-mono tracking-tight">
                                 {leetcodeStats.totalSolved}
                             </div>
                             <div className="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
@@ -71,7 +71,7 @@ export default function LeetCodeStats({ leetcodeStats, leetcodeLoading }) {
                     {/* EASY SOLVED */}
                     <div className="border border-emerald-500/20 bg-emerald-950/10 p-4 flex flex-col justify-between gap-3 hover:border-emerald-500/40 transition-colors">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs text-emerald-400 font-bold uppercase tracking-wider">EASY</span>
+                            <span className="text-[11px] sm:text-xs text-emerald-400 font-bold uppercase tracking-wider">EASY</span>
                             <span className="text-[10px] px-2 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                                 {Math.round(((leetcodeStats.easySolved || 0) / (leetcodeStats.totalSolved || 1)) * 100)}%
                             </span>
@@ -89,7 +89,7 @@ export default function LeetCodeStats({ leetcodeStats, leetcodeLoading }) {
                     {/* MEDIUM SOLVED */}
                     <div className="border border-amber-500/20 bg-amber-950/10 p-4 flex flex-col justify-between gap-3 hover:border-amber-500/40 transition-colors">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs text-amber-400 font-bold uppercase tracking-wider">MEDIUM</span>
+                            <span className="text-[11px] sm:text-xs text-amber-400 font-bold uppercase tracking-wider">MEDIUM</span>
                             <span className="text-[10px] px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/30">
                                 {Math.round(((leetcodeStats.mediumSolved || 0) / (leetcodeStats.totalSolved || 1)) * 100)}%
                             </span>
@@ -107,7 +107,7 @@ export default function LeetCodeStats({ leetcodeStats, leetcodeLoading }) {
                     {/* HARD SOLVED */}
                     <div className="border border-rose-500/20 bg-rose-950/10 p-4 flex flex-col justify-between gap-3 hover:border-rose-500/40 transition-colors">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs text-rose-400 font-bold uppercase tracking-wider">HARD</span>
+                            <span className="text-[11px] sm:text-xs text-rose-400 font-bold uppercase tracking-wider">HARD</span>
                             <span className="text-[10px] px-2 py-0.5 bg-rose-500/20 text-rose-300 border border-rose-500/30">
                                 {Math.round(((leetcodeStats.hardSolved || 0) / (leetcodeStats.totalSolved || 1)) * 100)}%
                             </span>

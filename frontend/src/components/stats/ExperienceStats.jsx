@@ -25,7 +25,7 @@ export default function ExperienceStats({ formatDate, experience, totalExperienc
                             >
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                                     <h3 className="text-xs font-mono font-bold uppercase text-white tracking-wider">
-                                        {exp?.title}
+                                        {exp?.company_name}
                                     </h3>
                                     <span className="text-[10px] font-mono text-indigo-300 border border-indigo-500/30 px-2 py-0.5 bg-indigo-500/10 w-fit">
                                         {formatDate(exp?.start_date)} - {formatDate(exp?.end_date)}
@@ -34,7 +34,7 @@ export default function ExperienceStats({ formatDate, experience, totalExperienc
 
                                 <div className="flex items-center gap-2 text-[11px] font-mono text-slate-400">
                                     <Building2 className="w-3.5 h-3.5 text-indigo-400" />
-                                    <span>{exp?.company}</span>
+                                    <span>{exp?.position}</span>
                                     {exp?.location && (
                                         <>
                                             <span>•</span>
@@ -79,7 +79,7 @@ export default function ExperienceStats({ formatDate, experience, totalExperienc
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono text-slate-300">
                     <span>Umumiy tajriba:</span>
-                    <span className="font-bold text-white">{totalExperienceYears || 0}+ yil</span>
+                    <span>{totalExperienceYears === 0 ? 'tajribasiz' : `${totalExperienceYears * 10 < 10 ? `${totalExperienceYears * 10}+ oy` : `${totalExperienceYears} yil`}`}</span>
                 </div>
             </div>
         </div>

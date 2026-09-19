@@ -78,7 +78,7 @@ export default function PortfolioStats({ username, formatDate }) {
                             <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-white">
                                 PORTFOLIO // LOYIHALAR
                             </h2>
-                            <span className="text-xs font-mono border border-indigo-500/30 px-2 py-0.5 bg-indigo-500/10 text-indigo-300 font-semibold">
+                            <span className="text-xs text-nowrap font-mono border border-indigo-500/30 px-2 py-0.5 bg-indigo-500/10 text-indigo-300 font-semibold">
                                 {totalCount} TA
                             </span>
                         </div>
@@ -100,7 +100,7 @@ export default function PortfolioStats({ username, formatDate }) {
                 </div>
             ) : (
                 <div className="flex flex-col gap-5">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                         {portfolio.map((item) => {
                             const techList = Array.isArray(item.technologies)
                                 ? item.technologies
@@ -114,7 +114,7 @@ export default function PortfolioStats({ username, formatDate }) {
                                     className="border border-white/12 bg-[#0e101c] hover:border-indigo-500/40 p-4 sm:p-5 flex flex-col justify-between gap-4 transition-all duration-200 group relative"
                                 >
                                     <div className="flex flex-col gap-3">
-                                        <div className="w-full h-60 overflow-hidden border border-white/10 bg-[#06070b] relative group-hover:border-indigo-500/30 transition-colors">
+                                        <div className="w-full h-48 sm:h-56 lg:h-60 overflow-hidden border border-white/10 bg-[#06070b] relative group-hover:border-indigo-500/30 transition-colors">
                                             {item.cover_image ? (
                                                 <img
                                                     onClick={() => { setOpenImage(true); setOpeningImage(item.cover_image) }}

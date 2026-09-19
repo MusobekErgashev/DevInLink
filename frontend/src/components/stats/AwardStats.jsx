@@ -69,7 +69,7 @@ export default function AwardStats({ username, formatDate, awards: initialAwards
                     <div className="flex flex-col">
                         <div className="flex items-center gap-2">
                             <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-white">
-                                AWARDS & CERTIFICATES // YUTUQLAR
+                                AWARDS & CERTIFICATES
                             </h2>
                             <span className="text-xs font-mono border border-amber-500/30 px-2 py-0.5 bg-amber-500/10 text-amber-300 font-semibold">
                                 {totalCount} TA

@@ -21,7 +21,7 @@ class UserController {
                 );
 
                 const technologiesQuery = await pool.query(
-                    'SELECT * FROM technologies WHERE user_id = $1 ORDER BY name ASC',
+                    'SELECT * FROM technologies WHERE user_id = $1 ORDER BY created_at DESC',
                     [userData.id]
                 );
 

@@ -2,12 +2,18 @@ const pool = require('../config/db');
 
 class TechnologyController {
     async getAll(req, res) {
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).json({ message: "User ID is required!" });
+        }
+
         try {
-            const technologies = await pool.query('SELECT * FROM technologies');
-            const technology_summary = await pool.query('SELECT technology_summary FROM users')
+            const technologies = await pool.query('SELECT * FROM technologies WHERE user_id = $1', [id]);
+            const technology_summary = await pool.query('SELECT technology_summary FROM users WHERE id = $1', [id])
             res.status(200).json({
-                ...technologies.rows,
-                ...technology_summary.rows
+                technologies: technologies.rows,
+                technology_summary: technology_summary.rows
             });
         } catch (error) {
             console.error("Technology getAll error:", error);

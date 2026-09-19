@@ -33,12 +33,20 @@ export default function EducationStats({ formatDate, education }) {
                                 </div>
 
                                 <div className="flex items-center gap-2 text-[11px] font-mono text-slate-400">
-                                    <BookOpen className="w-3.5 h-3.5 text-purple-400" />
-                                    <span>DARAZA: {item?.degree}</span>
+                                    <GraduationCap className="w-3.5 h-3.5 text-purple-400" />
+                                    <span>{item?.course_name}</span>
+                                    {
+                                        item?.degree && (
+                                            <>
+                                                <span>•</span>
+                                                <span>DARAJA: {item?.degree}</span>
+                                            </>
+                                        )
+                                    }
                                     {item?.location && (
                                         <>
                                             <span>•</span>
-                                            <span className="uppercase">{item?.location}</span>
+                                            <span className="capitalize">{item?.location}</span>
                                         </>
                                     )}
                                 </div>
@@ -56,17 +64,6 @@ export default function EducationStats({ formatDate, education }) {
                         </div>
                     )}
                 </div>
-
-            </div>
-
-            <div className="border border-white/12 bg-[#0e101c] p-4 flex flex-col gap-2">
-                <div className="flex items-center gap-2 text-xs font-mono font-bold text-purple-300 uppercase tracking-wider border-b border-white/10 pb-2">
-                    <BookOpen className="w-3.5 h-3.5 text-purple-400" />
-                    <span>CERTIFICATIONS & BADGES</span>
-                </div>
-                <p className="text-slate-400 text-xs font-mono">
-                    Rasmiy sertifikatlar hamda akademik muvaffaqiyatlar ro&apos;yxati.
-                </p>
             </div>
         </div>
     )

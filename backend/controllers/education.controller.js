@@ -41,15 +41,15 @@ class EducationController {
     async create(req, res) {
         try {
             const userId = req.user.id;
-            const { education_place, location, description, is_current, degree, start_date, end_date } = req.body;
+            const { education_place, location, description, course_name, is_current, degree, start_date, end_date } = req.body;
 
-            if (!education_place || !location || !degree || !start_date || !end_date) {
-                return res.status(400).json({ message: "Muassasa nomi, joylashuvi, daraja va boshlanish - tugash sanasi kiritilishi shart!" });
+            if (!education_place || !location || !start_date || !end_date || !course_name) {
+                return res.status(400).json({ message: "Muassasa nomi, joylashuvi va boshlanish - tugash sanasi kiritilishi shart!" });
             }
 
             const newEducation = await pool.query(
-                "INSERT INTO education (user_id, education_place, location, description, is_current, degree, start_date, end_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
-                [userId, education_place, location, description, is_current || false, degree, start_date, end_date || null]
+                "INSERT INTO education (user_id, education_place, location, course_name, description, is_current, degree, start_date, end_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
+                [userId, education_place, location, course_name, description, is_current || false, degree, start_date, end_date || null]
             );
 
             res.status(201).json(newEducation.rows[0]);
@@ -64,12 +64,13 @@ class EducationController {
         try {
             const userId = req.user.id;
             const { id } = req.params;
-            const { education_place, location, description, is_current, degree, start_date, end_date } = req.body;
+            const { education_place, location, description, course_name, is_current, degree, start_date, end_date } = req.body;
 
             const updatedEducation = await pool.query(
                 `UPDATE education 
                  SET education_place = COALESCE($1, education_place),
-                     location = COALESCE($2, location),
+                     course_name = COALESCE($2, course_name),
+                     location = COALESCE($3, location),
                      description = COALESCE($3, description),
                      is_current = COALESCE($4, is_current),
                      degree = COALESCE($5, degree),
@@ -77,7 +78,7 @@ class EducationController {
                      end_date = COALESCE($7, end_date)
                  WHERE id = $8 AND user_id = $9
                  RETURNING *`,
-                [education_place, location, description, is_current, degree, start_date, end_date, id, userId]
+                [education_place, location, description, course_name, is_current, degree, start_date, end_date, id, userId]
             );
 
             if (updatedEducation.rows.length === 0) {

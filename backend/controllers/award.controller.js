@@ -1,15 +1,16 @@
-const pool = require("../config/db")
-const supabase = require("../config/supabase")
+const pool = require("../config/db");
+const supabase = require("../config/supabase");
 
 class AwardController {
     // get by username
-
     async getByUsername(req, res) {
-        const { username } = req.params
+        const { username } = req.params;
         const { page, limit } = req.query;
 
         try {
-            if (!username) return res.status(400).json({ message: "Username ko'rsatilmadi" })
+            if (!username) {
+                return res.status(400).json({ message: "Username ko'rsatilmadi" });
+            }
 
             if (page || limit) {
                 const pageNum = Math.max(1, parseInt(page) || 1);
@@ -27,76 +28,117 @@ class AwardController {
 
                 const awards = await pool.query(
                     `SELECT a.* FROM awards a 
+                     JOIN users u ON a.user_id = u.id 
+                     WHERE LOWER(u.username) = LOWER($1) 
+                     ORDER BY a.created_at DESC
+                     LIMIT $2 OFFSET $3`,
+                    [username, limitNum, offset]
+                );
+
+                return res.status(200).json({
+                    data: awards.rows,
+                    total,
+                    page: pageNum,
+                    totalPages: Math.ceil(total / limitNum) || 1
+                });
+            }
+
+            const awards = await pool.query(
+                `SELECT a.* FROM awards a 
                  JOIN users u ON a.user_id = u.id 
                  WHERE LOWER(u.username) = LOWER($1) 
                  ORDER BY a.created_at DESC`,
-                    [username]
-                )
+                [username]
+            );
 
-                res.json(awards.rows)
-            }
+            return res.status(200).json(awards.rows);
         } catch (err) {
-            console.log(err)
-            res.status(500).json({ message: "Serverda xatolik yuz berdi" })
+            console.error('getByUsername error:', err);
+            return res.status(500).json({ message: "Serverda xatolik yuz berdi" });
         }
     }
 
-    // update
-
-    async updateAward(req, res) {
-        const { id } = req.params
-        const { title, description, image_url } = req.body
-
-        try {
-            if (!id) return res.status(404).json({ message: "ID topilmadi" })
-
-            const award = await pool.query('UPDATE awards SET title = $1, description = $2, image_url = $3 WHERE id = $4', [title, description, image_url, id])
-
-            if (!award.rows.length) return res.status(404).json({ message: "Award topilmadi" })
-            res.json(award.rows[0])
-        } catch (err) {
-            console.log(err)
-            res.status(500).json({ message: "Server xatolik berdi" })
-        }
-    }
-
-    // create
-
+    // create award
     async createAward(req, res) {
-        const userId = req.user.id
+        const userId = req.user.id;
 
         try {
-            const { title, description, date_achived, image_url } = req.body
+            const { title, description, date_achived, image_url } = req.body;
 
-            if (!title || !description || !date_achived) return res.status(400).json({ message: "Iltimos, barcha maydonlarni to'ldiring" })
+            if (!title || !description || !date_achived) {
+                return res.status(400).json({ message: "Iltimos, barcha maydonlarni to'ldiring" });
+            }
 
-            const award = await pool.query('INSERT INTO awards (user_id, title, description, date_achived, image_url) VALUES ($1, $2, $3, $4, $5) RETURNING *', [userId, title, description, date_achived, image_url])
-            res.json(award.rows[0])
+            const award = await pool.query(
+                `INSERT INTO awards (user_id, title, description, date_achived, image_url) 
+                 VALUES ($1, $2, $3, $4, $5) 
+                 RETURNING *`,
+                [userId, title, description, date_achived, image_url || null]
+            );
+
+            return res.status(201).json(award.rows[0]);
         } catch (err) {
-            console.log(err)
-            res.status(500).json({ message: "Server xatolik berdi" })
+            console.error('createAward error:', err);
+            return res.status(500).json({ message: "Serverda xatolik yuz berdi" });
         }
     }
 
-    // delete
-
-    async delete(req, res) {
-        const { id } = req.params
+    // update award
+    async updateAward(req, res) {
+        const { id } = req.params;
+        const { title, description, image_url, date_achived } = req.body;
+        const userId = req.user.id;
 
         try {
-            const award = await pool.query('DELETE FROM awards WHERE id = $1', [id])
+            if (!id) {
+                return res.status(400).json({ message: "ID topilmadi" });
+            }
 
-            if (!award.rows.length) return res.status(404).json({ message: "Award topilmadi" })
+            const award = await pool.query(
+                `UPDATE awards 
+                 SET title = COALESCE($1, title), 
+                     description = COALESCE($2, description), 
+                     image_url = COALESCE($3, image_url),
+                     date_achived = COALESCE($4, date_achived) 
+                 WHERE id = $5 AND user_id = $6 
+                 RETURNING *`,
+                [title, description, image_url, date_achived, id, userId]
+            );
 
-            res.json({ message: "Award o'chirildi" })
+            if (award.rows.length === 0) {
+                return res.status(404).json({ message: "Award topilmadi yoki sizga tegishli emas" });
+            }
+
+            return res.status(200).json(award.rows[0]);
         } catch (err) {
-            console.log(err)
-            res.status(500).json({ message: "Server xatolik berdi" })
+            console.error('updateAward error:', err);
+            return res.status(500).json({ message: "Serverda xatolik yuz berdi" });
+        }
+    }
+
+    // delete award
+    async delete(req, res) {
+        const { id } = req.params;
+        const userId = req.user.id;
+
+        try {
+            const award = await pool.query(
+                `DELETE FROM awards WHERE id = $1 AND user_id = $2 RETURNING *`,
+                [id, userId]
+            );
+
+            if (award.rows.length === 0) {
+                return res.status(404).json({ message: "Award topilmadi yoki sizga tegishli emas" });
+            }
+
+            return res.status(200).json({ message: "Award o'chirildi", award: award.rows[0] });
+        } catch (err) {
+            console.error('delete award error:', err);
+            return res.status(500).json({ message: "Serverda xatolik yuz berdi" });
         }
     }
 
     // update image
-
     async updateImage(req, res) {
         try {
             const { id } = req.params;
@@ -111,12 +153,12 @@ class AwardController {
                 return res.status(400).json({ message: 'Rasm fayli yuklanmadi.' });
             }
 
-            const existingPortfolio = await pool.query(
+            const existingAward = await pool.query(
                 'SELECT id FROM awards WHERE id = $1 AND user_id = $2',
                 [id, userId]
             );
 
-            if (existingPortfolio.rows.length === 0) {
+            if (existingAward.rows.length === 0) {
                 return res.status(404).json({ message: 'Award topilmadi yoki sizga tegishli emas.' });
             }
 
@@ -158,4 +200,4 @@ class AwardController {
     }
 }
 
-module.exports = new AwardController()
+module.exports = new AwardController();

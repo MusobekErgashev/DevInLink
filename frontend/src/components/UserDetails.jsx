@@ -100,23 +100,23 @@ export default function UserDetails({ username: propUsername }) {
   }
 
   return (
-    <div className="w-full text-slate-100 font-inter p-4 sm:p-6 flex flex-col gap-0 bg-[#08090e] min-h-screen">
-      <section className="w-full border border-white/15 bg-[#0b0c14] relative p-5 sm:p-7 flex flex-col gap-6">
-        <div className="flex items-center justify-between border-b border-white/12 pb-3">
+    <div className="w-full text-slate-100 font-inter p-3 sm:p-5 lg:p-6 flex flex-col gap-0 bg-[#08090e] min-h-screen">
+      <section className="w-full border border-white/15 bg-[#0b0c14] relative p-4 sm:p-6 lg:p-7 flex flex-col gap-5 sm:gap-6">
+        <div className="flex flex-wrap items-center justify-between border-b border-white/12 pb-3 gap-2">
           <div className="flex items-center gap-2 cursor-pointer hover:text-indigo-500 transition-colors duration-300" onClick={() => router.back()}>
             <ChevronLeft size={20} className="-translate-y-0.5" />
             <span className="text-xs font-mono font-bold uppercase tracking-widest text-indigo-400">
               ortga
             </span>
           </div>
-          <span className="text-[11px] font-mono text-slate-400 uppercase tracking-widest">
+          <span className="text-[10px] sm:text-[11px] font-mono text-slate-400 uppercase tracking-widest">
             {`qo'shilgan sana - ${formatDate(user?.created_at)}`}
           </span>
         </div>
 
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="flex items-start sm:items-center gap-5">
-            <div className="relative w-24 h-24 sm:w-28 sm:h-28 border-2 border-indigo-500/60 bg-[#06070b] shrink-0 flex items-center justify-center">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 w-full lg:w-auto">
+            <div className="relative w-20 h-20 sm:w-28 sm:h-28 border-2 border-indigo-500/60 bg-[#06070b] shrink-0 flex items-center justify-center">
               {user?.avatar ? (
                 <img
                   src={user?.avatar}
@@ -125,7 +125,7 @@ export default function UserDetails({ username: propUsername }) {
                   className="object-cover w-full h-full cursor-pointer"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-indigo-950/60 text-indigo-300 font-mono font-bold text-3xl">
+                <div className="w-full h-full flex items-center justify-center bg-indigo-950/60 text-indigo-300 font-mono font-bold text-2xl sm:text-3xl">
                   {formattedName.charAt(0)}
                 </div>
               )}
@@ -135,41 +135,41 @@ export default function UserDetails({ username: propUsername }) {
               <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-indigo-400" />
             </div>
 
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-wrap items-baseline gap-3">
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight uppercase font-mono">
+            <div className="flex flex-col gap-2 min-w-0 flex-1">
+              <div className="flex flex-wrap items-baseline gap-2 sm:gap-3">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight uppercase font-mono wrap-break-word">
                   {formattedName || 'YUKLANMOQDA...'}
                 </h1>
-                <span className="text-sm font-mono text-indigo-400 font-semibold">
+                <span className="text-xs sm:text-sm font-mono text-indigo-400 font-semibold break-all">
                   @{user?.username || 'user'}
                 </span>
               </div>
 
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-300 font-mono">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-slate-300 font-mono">
                 {user?.job_title && (
                   <div className="flex items-center gap-1.5 px-2.5 py-1 bg-indigo-500/10 border border-indigo-500/30 text-indigo-300">
-                    <Briefcase className="w-3.5 h-3.5" />
-                    <span>{user?.job_title}</span>
+                    <Briefcase className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate">{user?.job_title}</span>
                   </div>
                 )}
 
                 {user?.location && (
                   <div className="flex items-center gap-1.5 text-slate-400 border border-white/10 px-2.5 py-1 bg-white/5">
-                    <MapPin className="w-3.5 h-3.5 text-rose-400" />
+                    <MapPin className="w-3.5 h-3.5 text-rose-400 shrink-0" />
                     <span>{user?.location}</span>
                   </div>
                 )}
 
                 {user?.total_experience_years !== null && user?.total_experience_years !== undefined && (
                   <div className="flex items-center gap-1.5 text-slate-400 uppercase border border-white/10 px-2.5 py-1 bg-white/5">
-                    <Award className="w-3.5 h-3.5 text-amber-400" />
-                    <span>{user?.total_experience_years === 0 ? 'tajribasiz' : `${user?.total_experience_years}+ yillik tajriba`}</span>
+                    <Award className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <span>{user?.total_experience_years === 0 ? 'tajribasiz' : `${user?.total_experience_years * 10 < 10 ? `${user?.total_experience_years * 10}+ oylik` : `${user?.total_experience_years} yillik`} tajriba`}</span>
                   </div>
                 )}
 
                 {user?.age && (
                   <div className="flex items-center gap-1.5 text-slate-400 border border-white/10 px-2.5 py-1 bg-white/5">
-                    <Calendar className="w-3.5 h-3.5 text-amber-400" />
+                    <Calendar className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                     <span>{user?.age} yosh</span>
                   </div>
                 )}
@@ -183,10 +183,11 @@ export default function UserDetails({ username: propUsername }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 w-full md:w-auto shrink-0 pt-2 md:pt-0">
+          <div className="flex items-center gap-3 w-full sm:w-auto shrink-0">
             <a
               href={`mailto:${user?.email}`}
-              className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-mono font-bold uppercase tracking-wider bg-indigo-600 hover:bg-indigo-700 text-white border border-indigo-400 transition-colors cursor-pointer"
+              target='_blank'
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 sm:py-2.5 text-xs font-mono font-bold uppercase tracking-wider bg-indigo-600 hover:bg-indigo-700 text-white border border-indigo-400 transition-colors cursor-pointer"
             >
               <Mail className="w-4 h-4" />
               <span>MESSAGE</span>
@@ -197,7 +198,7 @@ export default function UserDetails({ username: propUsername }) {
               className="p-2.5 bg-white/5 hover:bg-white/12 text-slate-200 border border-white/15 transition-colors cursor-pointer relative"
               title="Share Profile"
             >
-              {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4" />}
+              {copied ? <Check className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-400" /> : <Share2 className="w-3 h-3 sm:w-4 sm:h-4" />}
               {copied && (
                 <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-emerald-600 text-white text-[10px] font-mono font-bold border border-emerald-400 whitespace-nowrap">
                   COPIED!
@@ -219,7 +220,7 @@ export default function UserDetails({ username: propUsername }) {
       <section className="w-full grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-white/15 border-x border-b border-white/15 bg-[#08090e]">
         {/* technologies */}
 
-        <TechnologyStats technologies={user?.technologies} />
+        <TechnologyStats technologies={user?.technologies} technology_summary={user?.technology_summary} />
 
         {/* experience */}
 

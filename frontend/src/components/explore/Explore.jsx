@@ -89,7 +89,7 @@ const Explore = () => {
   };
 
   return (
-    <div className="w-full text-slate-100 mb-15 font-inter">
+    <div className="w-full text-slate-100 mb-7 sm:mb-15 font-inter">
       <div className="border border-white/8 bg-[#0e101c] divide-y divide-white/10 rounded-xl overflow-hidden shadow-2xl">
         {error ? <p className="py-5 text-center text-[18px] text-slate-400 font-mono font-bold uppercase flex justify-center items-center gap-2 h-40 leading-none"><HeartCrack size={22} /> <span className='translate-y-0.5'>{error}</span></p> : users.users?.map((user) => {
           const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username || 'Noma\'lum Dasturchi';
@@ -104,7 +104,7 @@ const Explore = () => {
             <div
               key={user.id}
               onClick={() => switchUser(user.username)}
-              className="border-b cursor-pointer hover:bg-white/5 transition-colors duration-300 border-white/20 p-4 sm:p-5 flex flex-col sm:flex-row gap-4 items-start relative group"
+              className="border-b cursor-pointer hover:bg-white/5 transition-colors duration-300 border-white/20 p-2 sm:p-5 flex flex-col sm:flex-row gap-4 items-start relative group"
             >
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
 

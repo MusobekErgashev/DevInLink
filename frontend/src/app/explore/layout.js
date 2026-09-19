@@ -10,7 +10,7 @@ function SearchHeader() {
   const resetQuery = useQueryStore((state) => state.resetQuery);
 
   return (
-    <div className="w-full rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] border border-white/10 backdrop-blur-2xl flex items-center justify-between px-4 py-3 shrink-0 relative overflow-hidden">
+    <div className="w-full shadow-[0_20px_50px_rgba(0,0,0,0.4)] border border-white/10 backdrop-blur-2xl flex items-center justify-between px-4 py-3 shrink-0 relative overflow-hidden">
       <div className="absolute -top-12 left-1/4 w-96 h-12 bg-indigo-500/10 blur-2xl pointer-events-none rounded-full" />
 
       <div className="flex items-center gap-3 flex-1 max-w-2xl z-10">
@@ -35,11 +35,8 @@ function SearchHeader() {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 z-10">
-        <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-slate-300 text-xs font-mono font-semibold">
-          <SlidersHorizontal className="w-3.5 h-3.5 text-indigo-400" />
-          <span>DASTURCHILAR</span>
-        </div>
+      <div className="flex ml-2 items-center gap-2 z-10 bg-white/5 border h-full border-white/12 p-2 px-4">
+        <SlidersHorizontal className="w-3.5 h-3.5 text-indigo-400" />
       </div>
     </div>
   );
@@ -57,8 +54,8 @@ export default function ExploreLayout({ children }) {
         <SearchHeader />
       </Suspense>
 
-      <div className="h-full w-full bg-background flex flex-col gap-4 flex-1 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] p-4 backdrop-blur-xl">
-        <div className='border py-4 px-5 border-white/8 bg-[#0e101c] flex items-center justify-between rounded-xl shadow-2xl'>
+      <div className="h-full w-full bg-background flex flex-col gap-2 sm:gap-4 flex-1 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] p-2 sm:p-4 backdrop-blur-xl">
+        <div className='border py-2.5 sm:py-4 px-3 sm:px-5 border-white/8 bg-[#0e101c] flex items-center justify-between rounded-xl shadow-2xl'>
           <div className='text-xs text-slate-400 font-bold font-mono uppercase tracking-widest flex items-center gap-2'>
             {query.length > 0 ? (
               <UserRoundSearch size={20} />

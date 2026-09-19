@@ -3,7 +3,7 @@ const router = Router()
 const technologiesController = require("../controllers/technology.controller")
 const { protect } = require("../middlewares/auth.middleware")
 
-router.get('/', technologiesController.getAll);
+router.get('/:id', technologiesController.getAll);
 router.post('/', protect, technologiesController.create);
 router.put('/:id', protect, technologiesController.update);
 router.delete('/:id', protect, technologiesController.delete);

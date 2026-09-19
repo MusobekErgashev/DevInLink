@@ -110,8 +110,8 @@ export default function GitHubStats({ username }) {
         </Link>
       </div>
 
-      <div className="overflow-x-auto w-full flex gap-5 justify-between items-center py-2 relative z-10">
-        <div className="grid grid-rows-2 gap-3 w-full">
+      <div className="w-full flex flex-col md:flex-row gap-5 justify-between items-center py-2 relative z-10">
+        <div className="grid grid-rows-2 gap-3 w-full md:max-w-110 min-w-max">
           <div className="bg-[#0e101c] border border-white/10 p-3.5 flex flex-col gap-1 relative overflow-hidden group hover:border-emerald-500/40 transition-colors">
             <div className="flex items-center justify-between">
               <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">JAMI FAOLLIK</span>
@@ -149,6 +149,7 @@ export default function GitHubStats({ username }) {
             totalCount: "{{count}} ta faollik o'tgan yilda",
           }}
           style={{
+            overflow: "hidden",
             color: '#94a3b8',
             fontFamily: 'monospace',
           }}

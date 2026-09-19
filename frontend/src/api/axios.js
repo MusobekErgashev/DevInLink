@@ -30,6 +30,28 @@ const processQueue = (error, token = null) => {
   failedQueue = []
 }
 
+// Check if a path is public (does not require auth redirect)
+const isPublicPath = (pathname) => {
+  if (!pathname) return false;
+  if (pathname === '/auth' || pathname.startsWith('/auth/')) return true;
+  if (pathname === '/explore' || pathname.startsWith('/explore/')) return true;
+
+  const protectedPaths = ['/', '/profile', '/community', '/quotes', '/settings'];
+  const isProtected = protectedPaths.some(path =>
+    path === '/' ? pathname === '/' : (pathname === path || pathname.startsWith(path + '/'))
+  );
+
+  const segments = pathname.split('/').filter(Boolean);
+  return segments.length === 1 && !isProtected;
+};
+
+const shouldRedirectToAuth = (originalRequest) => {
+  if (originalRequest?.skipAuthRedirect) return false;
+  if (typeof window === 'undefined') return false;
+  const pathname = window.location.pathname;
+  return !isPublicPath(pathname);
+};
+
 // ── Xatolarni markazlashgan boshqarish ─────────────────────────────────
 api.interceptors.response.use(
   (response) => response,
@@ -63,7 +85,7 @@ api.interceptors.response.use(
         isRefreshing = false
         processQueue(refreshError, null)
 
-        if (typeof window !== 'undefined' && window.location.pathname !== '/auth') {
+        if (shouldRedirectToAuth(originalRequest)) {
           toast.error("Sessiya tugadi, iltimos qayta kiring")
           window.location.href = '/auth'
         }
@@ -72,7 +94,7 @@ api.interceptors.response.use(
     }
 
     if (status === 401 && originalRequest?.url?.includes('auth/refresh')) {
-      if (typeof window !== 'undefined' && window.location.pathname !== '/auth') {
+      if (shouldRedirectToAuth(originalRequest)) {
         toast.error("Sessiya tugadi, iltimos qayta kiring")
         window.location.href = '/auth'
       }

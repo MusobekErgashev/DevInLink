@@ -31,4 +31,29 @@ const protect = async (req, res, next) => {
     }
 };
 
-module.exports = { protect };
+const optionalProtect = async (req, res, next) => {
+    let token = req.cookies?.accessToken || req.cookies?.token;
+
+    if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+        token = req.headers.authorization.split(' ')[1];
+    }
+
+    if (token) {
+        try {
+            const decoded = verifyAccessToken(token);
+            if (decoded?.id) {
+                const user = await pool.query('SELECT * FROM users WHERE id = $1', [decoded.id]);
+                if (user.rows.length > 0) {
+                    const userData = user.rows[0];
+                    delete userData.password_hash;
+                    req.user = userData;
+                }
+            }
+        } catch (error) {
+            // Token invalid or expired, continue as guest
+        }
+    }
+    next();
+};
+
+module.exports = { protect, optionalProtect };

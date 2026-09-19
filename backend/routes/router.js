@@ -8,9 +8,10 @@ router.use('/portfolio', require('./portfolio.route'))
 router.use('/experience', require('./experience.route'))
 router.use('/education', require('./education.route'))
 router.use('/awards', require('./awards.route'))
-router.use('/quotes', require('./quotes.route'))
+router.use('/quotes', require('./quote.route'))
 router.use('/languages', require('./language.route'))
 router.use('/leetcode', require('./leetcode.route'))
+router.use('/community', require('./community.route'))
 router.use('/auth', require('./auth.route'))
 
 module.exports = router
