@@ -69,8 +69,8 @@ const Auth = () => {
 
             {/* Asosiy Container */}
             <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-12 p-10 gap-8 items-center bg-background border border-zinc-800/80 rounded-3xl backdrop-blur-2xl shadow-2xl overflow-hidden">
-                    <div className="lg:col-span-6 py-6 flex flex-col justify-between space-y-8 ">
+                <div className="grid grid-cols-1 w-max lg:w-full mx-auto lg:mx-0 lg:grid-cols-12 sm:p-10 gap-8 items-center bg-transparent lg:bg-background lg:border border-zinc-800/80 lg:backdrop-blur-2xl lg:shadow-2xl overflow-hidden">
+                    <div className="col-span-6 py-6 hidden lg:flex flex-col justify-between space-y-8 ">
                         <div>
                             <Image src="/logo.png" alt="Logo" width={200} height={200} />
                         </div>
@@ -88,7 +88,7 @@ const Auth = () => {
                             </h1>
                             <p className="text-zinc-400 text-sm leading-relaxed max-w-md">
                                 {`Haliyam ishga topshirishda PDF resume yuborib, portfolio uchun alohida sayt yasab yuribsizmi xoji aka?
-                Devinlinkda ro'yxatdan o'tib bu muammolarga yechim toping.`}
+                                Devinlinkda ro'yxatdan o'tib bu muammolarga yechim toping.`}
                             </p>
                         </div>
 
@@ -116,7 +116,7 @@ const Auth = () => {
                     </div>
 
                     {/* ================= O'NG TOMON: Authentifikatsiya Formasi ================= */}
-                    <div className="lg:col-span-6 px-8 sm:px-10 py-10 border border-zinc-800/80 rounded-3xl backdrop-blur-2xl shadow-2xl overflow-hidden bg-zinc-950/40">
+                    <div className="lg:col-span-6 px-4 sm:px-10 py-10 border border-zinc-800/80 rounded-3xl backdrop-blur-2xl shadow-2xl overflow-hidden bg-zinc-950/40">
                         {/* Header Switcher (Register / Login Switch) */}
                         <div className="relative flex w-full p-1 bg-zinc-900/90 border border-zinc-800/80 rounded-2xl mb-8 backdrop-blur-xl shadow-inner">
                             <button
