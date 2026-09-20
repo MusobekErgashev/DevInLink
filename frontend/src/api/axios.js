@@ -1,16 +1,8 @@
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
 
-const isLocal = typeof window !== 'undefined'
-  ? ['localhost', '127.0.0.1'].includes(window.location.hostname)
-  : (process.env.NODE_ENV !== 'production')
-
-const BASE_URL = isLocal
-  ? (typeof window !== 'undefined' ? `http://${window.location.hostname}:8000/api/` : 'http://localhost:8000/api/')
-  : process.env.BASE_URL
-
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8000/api/',
   headers: { 'Content-Type': 'application/json' },
   timeout: 15000,
   withCredentials: true,
