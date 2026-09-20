@@ -7,12 +7,13 @@ export function middleware(request) {
 
   const hasToken = !!(accessToken || refreshToken);
 
+  const isHomePage = pathname === '/';
   const isAuthPage = pathname === '/auth' || pathname.startsWith('/auth/');
 
   // Protected paths that strictly require authentication
-  const protectedPaths = ['/', '/profile', '/community', '/quotes', '/settings'];
+  const protectedPaths = ['/profile', '/community', '/quotes', '/settings'];
   const isExplicitlyProtected = protectedPaths.some(path =>
-    path === '/' ? pathname === '/' : (pathname === path || pathname.startsWith(path + '/'))
+    pathname === path || pathname.startsWith(path + '/')
   );
 
   // Explore page is public
@@ -22,7 +23,7 @@ export function middleware(request) {
   const segments = pathname.split('/').filter(Boolean);
   const isUsernameProfile = segments.length === 1 && !isExplicitlyProtected && !isAuthPage && !isExplorePage;
 
-  const isPublicPage = isAuthPage || isExplorePage || isUsernameProfile;
+  const isPublicPage = isHomePage || isAuthPage || isExplorePage || isUsernameProfile;
 
   // If user is not authenticated and trying to access a non-public path
   if (!hasToken && !isPublicPage) {

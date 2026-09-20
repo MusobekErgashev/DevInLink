@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 const Page = () => {
   const router = useRouter()
   React.useEffect(() => {
-    router.push('/profile')
+    router.push('/explore')
   }, [router])
   return null
 }

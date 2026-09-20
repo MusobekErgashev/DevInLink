@@ -47,6 +47,19 @@ class AuthValidate {
     }).xor('username', 'email').messages({
         'object.xor': 'Login qilish uchun yoki username, yoki email kiriting (ikkalasi birga emas)'
     });
+
+    changePassword = Joi.object({
+        oldPassword: Joi.string().min(8).required().empty('').messages({
+            'string.min': 'Eski parol kamida 8 ta belgidan iborat bo\'lishi kerak',
+            'any.required': 'Eski parol kiritilishi shart',
+            'empty': 'Eski parol kiritilishi shart'
+        }),
+        newPassword: Joi.string().min(8).required().empty('').messages({
+            'string.min': 'Yangi parol kamida 8 ta belgidan iborat bo\'lishi kerak',
+            'any.required': 'Yangi parol kiritilishi shart',
+            'empty': 'Yangi parol kiritilishi shart'
+        })
+    });
 }
 
 module.exports = new AuthValidate();

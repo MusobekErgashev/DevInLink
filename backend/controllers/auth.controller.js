@@ -132,6 +132,37 @@ class AuthController {
             return res.status(401).json({ message: "Refresh token yaroqsiz yoki muddati o'tgan!" });
         }
     }
+
+    // change password
+
+    async changePassword(req, res) {
+        try {
+            const validationResult = authValidate.changePassword.validate(req.body);
+
+            if (validationResult.error) {
+                return res.status(400).json({ message: validationResult.error.message });
+            }
+
+            const { oldPassword, newPassword } = req.body;
+            const { id } = req.user;
+
+            const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+            const userData = user.rows[0];
+
+            const isMatch = await comparePassword(oldPassword, userData.password_hash);
+
+            if (!isMatch) {
+                return res.status(400).json({ message: "Parol noto'g'ri!" });
+            }
+
+            const newPasswordHash = await hashPassword(newPassword);
+            await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [newPasswordHash, id]);
+            res.status(200).json({ message: "Parol muvaffaqiyatli o'zgartirildi!" });
+        } catch (error) {
+            console.error("changePassword error:", error);
+            res.status(500).json({ message: "Serverda xatolik yuz berdi!" });
+        }
+    }
 }
 
 module.exports = new AuthController();

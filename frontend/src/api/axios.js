@@ -33,12 +33,13 @@ const processQueue = (error, token = null) => {
 // Check if a path is public (does not require auth redirect)
 const isPublicPath = (pathname) => {
   if (!pathname) return false;
+  if (pathname === '/') return true;
   if (pathname === '/auth' || pathname.startsWith('/auth/')) return true;
   if (pathname === '/explore' || pathname.startsWith('/explore/')) return true;
 
-  const protectedPaths = ['/', '/profile', '/community', '/quotes', '/settings'];
+  const protectedPaths = ['/profile', '/community', '/quotes', '/settings'];
   const isProtected = protectedPaths.some(path =>
-    path === '/' ? pathname === '/' : (pathname === path || pathname.startsWith(path + '/'))
+    pathname === path || pathname.startsWith(path + '/')
   );
 
   const segments = pathname.split('/').filter(Boolean);

@@ -38,6 +38,11 @@ export default function Settings() {
     const [phone, setPhone] = useState("");
     const [leetcodeUsername, setLeetcodeUsername] = useState("");
 
+    // Password Change State
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [changingPassword, setChangingPassword] = useState(false);
+
     // Technologies State
     const [technologies, setTechnologies] = useState([]);
     const [newTech, setNewTech] = useState("");
@@ -224,6 +229,32 @@ export default function Settings() {
             toast.error(err.response?.data?.message || "Avatar yuklashda xatolik yuz berdi");
         } finally {
             setAvatarUploading(false);
+        }
+    };
+
+    // Password change handler
+    const handleChangePassword = async (e) => {
+        if (e) e.preventDefault();
+        if (!oldPassword || !newPassword) {
+            toast.error("Iltimos, eski va yangi parolni kiriting!");
+            return;
+        }
+        try {
+            setChangingPassword(true);
+            const res = await api.post("auth/change-password", {
+                oldPassword,
+                newPassword
+            });
+            if (res.status === 200) {
+                toast.success(res.data?.message || "Parol muvaffaqiyatli o'zgartirildi!");
+                setOldPassword("");
+                setNewPassword("");
+            }
+        } catch (err) {
+            console.error("Change password error:", err);
+            toast.error(err.response?.data?.message || "Parolni o'zgartirishda xatolik yuz berdi");
+        } finally {
+            setChangingPassword(false);
         }
     };
 
@@ -800,6 +831,36 @@ export default function Settings() {
                                 className='px-2 py-1.5 border border-white/12 outline-none focus:border-blue-300/80 bg-transparent text-sm text-white' placeholder='website url' />
                             <input type="text" value={leetcodeUsername} onChange={(e) => setLeetcodeUsername(e.target.value)}
                                 className='px-2 py-1.5 border border-white/12 outline-none focus:border-blue-300/80 bg-transparent text-sm text-white' placeholder='leetcode username' />
+                        </div>
+
+                        {/* Change Password Block */}
+                        <div className="pt-4 border-t border-white/12 flex flex-col gap-3">
+                            <h2 className="text-xs uppercase font-semibold text-slate-300">{"Parolni o'zgartirish"}</h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-center">
+                                <input
+                                    type="password"
+                                    value={oldPassword}
+                                    onChange={(e) => setOldPassword(e.target.value)}
+                                    className="px-2 py-1.5 border border-white/12 outline-none focus:border-blue-300/80 bg-transparent text-sm text-white"
+                                    placeholder="Eski parol"
+                                />
+                                <input
+                                    type="password"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                    className="px-2 py-1.5 border border-white/12 outline-none focus:border-blue-300/80 bg-transparent text-sm text-white"
+                                    placeholder="Yangi parol"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={handleChangePassword}
+                                    disabled={changingPassword}
+                                    className="w-fit px-4 py-1.5 bg-blue-600/80 hover:bg-blue-600 text-white text-xs font-semibold uppercase tracking-wider rounded transition-colors flex items-center gap-2 disabled:opacity-50 cursor-pointer"
+                                >
+                                    {changingPassword ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                                    <span>{changingPassword ? "O'zgartirilmoqda..." : "Parolni yangilash"}</span>
+                                </button>
+                            </div>
                         </div>
                     </form>
                 )}
