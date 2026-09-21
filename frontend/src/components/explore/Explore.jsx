@@ -156,11 +156,7 @@ const Explore = () => {
                   {user.total_experience_years !== undefined && user.total_experience_years !== null && (
                     <div className="flex items-center gap-1.5 border border-white/10 px-2 py-0.5 bg-white/5 text-slate-300 uppercase">
                       <Award className="w-3.5 h-3.5 text-amber-400" />
-                      <span>
-                        {user.total_experience_years === 0
-                          ? 'tajribasiz'
-                          : `${user.total_experience_years}+ yillik tajriba`}
-                      </span>
+                      <span>{user?.total_experience_years === 0 ? 'tajribasiz' : `${user?.total_experience_years * 10 < 10 ? `${user?.total_experience_years * 10}+ oylik` : `${user?.total_experience_years} yillik`} tajriba`}</span>
                     </div>
                   )}
 
