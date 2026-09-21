@@ -82,8 +82,8 @@ const Menu = () => {
       )}
 
       <aside
-        className={`h-full font-inter flex flex-col justify-between bg-[#0b0c14] border-r border-white/12 transition-all duration-300 z-50 shrink-0 ${isOpen
-          ? 'w-68 fixed top-0 left-0 h-full xl:relative xl:top-auto xl:left-auto shadow-2xl xl:shadow-none'
+        className={`h-dvh max-h-dvh xl:h-full font-inter flex flex-col justify-between bg-[#0b0c14] border-r border-white/12 transition-all duration-300 z-50 shrink-0 ${isOpen
+          ? 'w-68 fixed inset-y-0 left-0 xl:relative xl:top-auto xl:left-auto shadow-2xl xl:shadow-none'
           : 'w-14 sm:w-18 relative'
           }`}
       >
@@ -95,7 +95,7 @@ const Menu = () => {
           {isOpen ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
         </button>
 
-        <div className={`flex items-center h-16 ${isOpen ? 'px-4' : 'px-0 sm:px-4'} border-b border-white/12 bg-[#0e101b]`}>
+        <div className={`flex items-center h-16 shrink-0 ${isOpen ? 'px-4' : 'px-0 sm:px-4'} border-b border-white/12 bg-[#0e101b]`}>
           <Link href="/explore" className={`flex items-center ${isOpen ? '' : 'mx-auto'} gap-2 overflow-hidden`}>
             <div className="flex items-center justify-center shrink-0">
               <Image src="/favicon.ico" alt="Logo Icon" width={35} height={35} className="object-contain" />
@@ -108,7 +108,7 @@ const Menu = () => {
           </Link>
         </div>
 
-        <div className="flex-1 overflow-y-auto overflow-x-hidden py-4 flex flex-col gap-1 px-2">
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden py-4 flex flex-col gap-1 px-2">
           <nav className="flex flex-col gap-1">
             {pages.map((item) => {
               const isActive = pathname === item.path
@@ -141,7 +141,7 @@ const Menu = () => {
           </nav>
         </div>
 
-        <div className="p-2 border-t border-white/12 bg-[#0e101b] flex flex-col gap-1">
+        <div className="p-2 border-t border-white/12 bg-[#0e101b] flex flex-col gap-1 shrink-0">
           {isLoggedIn ? (
             <>
               <Link
