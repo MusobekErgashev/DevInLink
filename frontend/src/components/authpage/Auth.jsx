@@ -35,8 +35,8 @@ const Auth = () => {
                     password_hash: password,
                 });
                 toast.success("Muvaffaqiyatli ro'yxatdan o'tingiz");
-                router.refresh();
-                router.push('/profile');
+                // eslint-disable-next-line
+                window.location.href = '/profile';
             } else {
                 await api.post('/auth/login', {
                     username: loginInput.includes('@gmail.com') ? null : loginInput,
@@ -44,8 +44,8 @@ const Auth = () => {
                     password_hash: password,
                 });
                 toast.success("Muvaffaqiyatli tizimga kirdingiz");
-                router.refresh();
-                router.push('/profile');
+                // eslint-disable-next-line
+                window.location.href = '/profile';
             }
         } catch (err) {
             setError(err?.response?.data?.message)
