@@ -1,7 +1,18 @@
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 
+const formatExternalUrl = (url) => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  return `https://${url}`;
+};
+
 export function LinkStats({ user, setOpenPhoneModal }) {
+  const linkedinUrl = formatExternalUrl(user?.linkedin_url);
+  const youtubeUrl = formatExternalUrl(user?.youtube_url);
+  const instagramUrl = formatExternalUrl(user?.instagram_url);
+  const websiteUrl = formatExternalUrl(user?.website_url);
+
   return (
     <section className="w-full border-x border-b border-white/15 bg-[#0e101c] grid grid-cols-7 font-mono text-xs">
       <Link
@@ -18,10 +29,10 @@ export function LinkStats({ user, setOpenPhoneModal }) {
       </Link>
 
       <Link
-        href={user?.linkedin_url || ''}
-        target={user?.linkedin_url ? '_blank' : ''}
+        href={linkedinUrl}
+        target={linkedinUrl ? '_blank' : ''}
         rel="noopener noreferrer"
-        className={`flex items-center justify-center gap-2 py-3 px-4 transition-colors ${user?.linkedin_url ? 'hover:bg-blue-600/20 text-slate-200 hover:text-white' : 'opacity-40 cursor-not-allowed text-slate-500'
+        className={`flex items-center justify-center gap-2 py-3 px-4 transition-colors ${linkedinUrl ? 'hover:bg-blue-600/20 text-slate-200 hover:text-white' : 'opacity-40 cursor-not-allowed text-slate-500'
           }`}
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-blue-400 shrink-0 -translate-y-0.25" fill="currentColor" viewBox="0 0 16 16">
@@ -31,7 +42,7 @@ export function LinkStats({ user, setOpenPhoneModal }) {
       </Link>
 
       <Link
-        href={`https://t.me/${user?.telegram_username}` || ''}
+        href={user?.telegram_username ? `https://t.me/${user.telegram_username}` : ''}
         target={user?.telegram_username ? '_blank' : ''}
         rel="noopener noreferrer"
         className={`flex items-center justify-center gap-2 py-3 px-4 transition-colors ${user?.telegram_username ? 'hover:bg-sky-600/20 text-slate-200 hover:text-white' : 'opacity-40 cursor-not-allowed text-slate-500'
@@ -44,10 +55,10 @@ export function LinkStats({ user, setOpenPhoneModal }) {
       </Link>
 
       <Link
-        href={user?.youtube_url || ''}
-        target={user?.youtube_url ? '_blank' : ''}
+        href={youtubeUrl}
+        target={youtubeUrl ? '_blank' : ''}
         rel="noopener noreferrer"
-        className={`flex items-center justify-center gap-2 py-3 px-4 transition-colors ${user?.youtube_url ? 'hover:bg-red-600/20 text-slate-200 hover:text-white' : 'opacity-40 cursor-not-allowed text-slate-500'
+        className={`flex items-center justify-center gap-2 py-3 px-4 transition-colors ${youtubeUrl ? 'hover:bg-red-600/20 text-slate-200 hover:text-white' : 'opacity-40 cursor-not-allowed text-slate-500'
           }`}
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-red-500 shrink-0 -translate-y-0.25" fill="currentColor" viewBox="0 0 16 16">
@@ -57,10 +68,10 @@ export function LinkStats({ user, setOpenPhoneModal }) {
       </Link>
 
       <Link
-        href={user?.instagram_url || ''}
-        target={user?.instagram_url ? '_blank' : ''}
+        href={instagramUrl}
+        target={instagramUrl ? '_blank' : ''}
         rel="noopener noreferrer"
-        className={`flex items-center justify-center gap-2 py-3 px-4 transition-colors ${user?.instagram_url ? 'hover:bg-pink-600/20 text-slate-200 hover:text-white' : 'opacity-40 cursor-not-allowed text-slate-500'
+        className={`flex items-center justify-center gap-2 py-3 px-4 transition-colors ${instagramUrl ? 'hover:bg-pink-600/20 text-slate-200 hover:text-white' : 'opacity-40 cursor-not-allowed text-slate-500'
           }`}
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-pink-500 shrink-0 -translate-y-0.25" fill="currentColor" viewBox="0 0 16 16">
@@ -70,10 +81,10 @@ export function LinkStats({ user, setOpenPhoneModal }) {
       </Link>
 
       <Link
-        href={user?.website_url || ''}
-        target={user?.website_url ? '_blank' : ''}
+        href={websiteUrl}
+        target={websiteUrl ? '_blank' : ''}
         rel="noopener noreferrer"
-        className={`flex items-center justify-center gap-2 py-3 px-4 transition-colors ${user?.website_url ? 'hover:bg-purple-600/20 text-slate-200 hover:text-white' : 'opacity-40 cursor-not-allowed text-slate-500'
+        className={`flex items-center justify-center gap-2 py-3 px-4 transition-colors ${websiteUrl ? 'hover:bg-purple-600/20 text-slate-200 hover:text-white' : 'opacity-40 cursor-not-allowed text-slate-500'
           }`}
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-purple-400 shrink-0 -translate-y-0.25" fill="currentColor" viewBox="0 0 16 16">
