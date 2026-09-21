@@ -16,7 +16,6 @@ const Menu = () => {
   const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { toggleMenu, isOpen, setIsOpen } = useMenuStore();
-  const [name, setName] = useState("")
 
   useEffect(() => {
     const handleResize = () => {
@@ -52,7 +51,6 @@ const Menu = () => {
         const res = await api.get('users/me', { skipAuthRedirect: true });
         if (res.data) {
           setIsLoggedIn(true);
-          setName(res.data.first_name)
         } else {
           setIsLoggedIn(false);
         }
@@ -61,7 +59,7 @@ const Menu = () => {
       }
     }
     checkAuth();
-  }, [pathname]);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -161,10 +159,10 @@ const Menu = () => {
                   <CircleUserRound size={20} />
                 </div>
                 {isOpen ? (
-                  <span className="truncate capitalize">{name}</span>
+                  <span className="truncate">PROFILE</span>
                 ) : (
                   <span className="absolute left-full ml-2 z-50 px-2.5 py-1 bg-[#0e101b] border border-white/15 text-slate-200 text-[11px] font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 shadow-md">
-                    {name}
+                    PROFILE
                   </span>
                 )}
               </Link>
