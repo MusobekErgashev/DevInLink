@@ -11,17 +11,17 @@ class UserController {
                 delete userData.password_hash;
 
                 const educationQuery = await pool.query(
-                    'SELECT * FROM education WHERE user_id = $1 ORDER BY start_date DESC',
+                    'SELECT * FROM education WHERE user_id = $1 ORDER BY id ASC',
                     [userData.id]
                 );
 
                 const experienceQuery = await pool.query(
-                    'SELECT * FROM experience WHERE user_id = $1 ORDER BY start_date DESC',
+                    'SELECT * FROM experience WHERE user_id = $1 ORDER BY id ASC',
                     [userData.id]
                 );
 
                 const technologiesQuery = await pool.query(
-                    'SELECT * FROM technologies WHERE user_id = $1 ORDER BY created_at DESC',
+                    'SELECT * FROM technologies WHERE user_id = $1 ORDER BY id ASC',
                     [userData.id]
                 );
 
