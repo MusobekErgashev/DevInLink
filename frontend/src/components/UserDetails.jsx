@@ -79,8 +79,8 @@ export default function UserDetails({ username: propUsername }) {
   const [copied, setCopied] = useState(false)
 
   const handleShare = () => {
-    if (typeof window !== 'undefined') {
-      navigator.clipboard?.writeText(window.location.href)
+    if (typeof window !== 'undefined' && user?.username) {
+      navigator.clipboard?.writeText(`${window.location.origin}/${user.username}`)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     }
