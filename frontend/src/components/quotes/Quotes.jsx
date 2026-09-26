@@ -23,11 +23,12 @@ import {
 import api from '@/api/axios'
 import toast from 'react-hot-toast'
 import WarningModal from '../WarningModal'
+import useUserStore from '@/utils/user.store'
 
 export default function Quotes() {
     const [quotesList, setQuotesList] = useState([])
     const [defaultUser, setDefaultUser] = useState(null)
-    const [currentUser, setCurrentUser] = useState(null)
+    const { user: currentUser, fetchUser: fetchCurrentUser } = useUserStore()
     const [loading, setLoading] = useState(true)
     const [submitting, setSubmitting] = useState(false)
     const [newQuote, setNewQuote] = useState("")
@@ -42,20 +43,8 @@ export default function Quotes() {
 
     // Fetch current logged in user profile
     useEffect(() => {
-        async function fetchCurrentUser() {
-            try {
-                const res = await api.get('users/me')
-                if (res.status === 200) {
-                    const uData = Array.isArray(res.data) ? res.data[0] : res.data
-                    setCurrentUser(uData)
-                }
-            } catch (err) {
-                // User may be a guest or unauthorized, silent catch
-                setCurrentUser(null)
-            }
-        }
         fetchCurrentUser()
-    }, [])
+    }, [fetchCurrentUser])
 
     // Fetch quotes from API
     const fetchQuotes = async () => {

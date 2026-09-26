@@ -23,7 +23,7 @@ export default function EducationStats({ formatDate, education }) {
                                 key={item?.id}
                                 className="border border-white/12 bg-[#0e101b] hover:border-indigo-500/40 p-4 flex flex-col gap-2.5 transition-colors"
                             >
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.25">
                                     <h3 className="text-xs font-mono font-bold uppercase text-white tracking-wider">
                                         {item?.education_place || 'AKADEMIYA / O&apos;QUV MARKAZI'}
                                     </h3>
@@ -32,22 +32,22 @@ export default function EducationStats({ formatDate, education }) {
                                     </span>
                                 </div>
 
-                                <div className="flex items-center gap-2 text-[11px] font-mono text-slate-400">
+                                <div className="flex items-center gap-x-2 flex-wrap gap-y-0.75 text-[11px] font-mono text-slate-400">
                                     <GraduationCap className="w-3.5 h-3.5 text-purple-400" />
                                     <span>{item?.course_name}</span>
                                     {
                                         item?.degree && (
-                                            <>
+                                            <span className="whitespace-nowrap space-x-1">
                                                 <span>•</span>
                                                 <span>DARAJA: {item?.degree}</span>
-                                            </>
+                                            </span>
                                         )
                                     }
                                     {item?.location && (
-                                        <>
+                                        <span className="whitespace-nowrap space-x-1">
                                             <span>•</span>
                                             <span className="capitalize">{item?.location}</span>
-                                        </>
+                                        </span>
                                     )}
                                 </div>
 

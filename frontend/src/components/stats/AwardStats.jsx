@@ -84,8 +84,14 @@ export default function AwardStats({ username, formatDate, awards: initialAwards
 
             {/* Content */}
             {loading ? (
-                <div className="border border-dashed border-white/10 p-6 text-center text-slate-500 text-xs font-mono">
-                    YUTUQLAR YUKLANMOQDA...
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+                    {Array.from({ length: 4 }).map((_, idx) => (
+                        <div key={idx} className="border border-white/10 bg-[#0e101c] p-4 flex flex-col gap-3 animate-pulse">
+                            <div className="w-full h-40 bg-white/5" />
+                            <div className="w-32 h-4 bg-white/10" />
+                            <div className="w-full h-8 bg-white/5" />
+                        </div>
+                    ))}
                 </div>
             ) : awards.length === 0 ? (
                 <div className="border border-dashed border-white/10 p-6 text-center text-slate-500 text-xs font-mono">

@@ -17,34 +17,49 @@ import { LinkStats } from './stats/LinkStats'
 import ImageViewer from './ImageViewer'
 import PortfolioStats from './stats/PortfolioStats'
 import AwardStats from './stats/AwardStats'
+import useUserStore from '@/utils/user.store'
 
 export default function UserDetails({ username: propUsername }) {
   const params = useParams()
   const searchParams = useSearchParams()
   const router = useRouter()
   const targetUsername = propUsername || params?.username || searchParams?.get('user')
+  const { user: currentUser, fetchUser: fetchCurrentUser } = useUserStore()
 
   const [userDetails, setUserDetails] = useState([])
+  const [loading, setLoading] = useState(true)
   const user = userDetails[0]
   const [openPhoneModal, setOpenPhoneModal] = useState(false)
-  const [leetcodeStats, setLeetcodeStats] = useState(null)
-  const [leetcodeLoading, setLeetcodeLoading] = useState(false)
 
   const [openImage, setOpenImage] = useState(false)
 
   useEffect(() => {
     let isMounted = true
     async function getData() {
-      try {
-        const endpoint = targetUsername ? `users/${encodeURIComponent(targetUsername)}` : 'users/me'
-        const res = await api.get(endpoint)
-        if (res.status === 200 && isMounted) {
-          const data = Array.isArray(res.data) ? res.data : [res.data]
-          setUserDetails(data)
-        }
-      } catch (err) {
+      if (!targetUsername) {
+        setLoading(true)
+        const meData = await fetchCurrentUser()
         if (isMounted) {
-          toast.error(err.response?.data?.message || 'Foydalanuvchi ma\'lumotlarini yuklashda xatolik')
+          setUserDetails(meData ? (Array.isArray(meData) ? meData : [meData]) : [])
+          setLoading(false)
+        }
+      } else {
+        try {
+          setLoading(true)
+          const endpoint = `users/${encodeURIComponent(targetUsername)}`
+          const res = await api.get(endpoint)
+          if (res.status === 200 && isMounted) {
+            const data = Array.isArray(res.data) ? res.data : [res.data]
+            setUserDetails(data)
+          } 
+        } catch (err) {
+          if (isMounted) {
+            toast.error(err.response?.data?.message || 'Foydalanuvchi ma\'lumotlarini yuklashda xatolik')
+          }
+        } finally {
+          if (isMounted) {
+            setLoading(false)
+          }
         }
       }
     }
@@ -52,29 +67,7 @@ export default function UserDetails({ username: propUsername }) {
     return () => {
       isMounted = false
     }
-  }, [targetUsername])
-
-  useEffect(() => {
-    if (!user?.id) return;
-    let isMounted = true
-    async function fetchLeetcode() {
-      try {
-        setLeetcodeLoading(true)
-        const res = await api.get(`leetcode/user/${user.id}`)
-        if (res.status === 200 && isMounted) {
-          setLeetcodeStats(res.data)
-        }
-      } catch (err) {
-        if (isMounted) setLeetcodeStats(null)
-      } finally {
-        if (isMounted) setLeetcodeLoading(false)
-      }
-    }
-    fetchLeetcode()
-    return () => {
-      isMounted = false
-    }
-  }, [user?.id])
+  }, [targetUsername, fetchCurrentUser])
 
   const [copied, setCopied] = useState(false)
 
@@ -97,6 +90,76 @@ export default function UserDetails({ username: propUsername }) {
     } catch {
       return dateStr
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="w-full text-slate-100 font-inter p-3 sm:p-5 lg:p-6 flex flex-col gap-6 bg-[#08090e] min-h-screen">
+        {/* Top Header Profile Skeleton */}
+        <div className="w-full border border-white/15 bg-[#0b0c14] p-4 sm:p-6 lg:p-7 flex flex-col gap-6 animate-pulse">
+          <div className="flex items-center justify-between border-b border-white/12 pb-3">
+            <div className="w-20 h-4 bg-white/10" />
+            <div className="w-36 h-3 bg-white/5" />
+          </div>
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 w-full lg:w-auto">
+              <div className="w-20 h-20 sm:w-28 sm:h-28 border-2 border-indigo-500/30 bg-white/10 shrink-0" />
+              <div className="flex flex-col gap-3 flex-1">
+                <div className="w-48 sm:w-64 h-7 bg-white/10" />
+                <div className="flex flex-wrap gap-2">
+                  <div className="w-28 h-6 bg-white/5" />
+                  <div className="w-24 h-6 bg-white/5" />
+                  <div className="w-20 h-6 bg-white/5" />
+                </div>
+                <div className="w-full max-w-lg h-4 bg-white/5" />
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <div className="w-28 h-9 bg-white/10" />
+              <div className="w-9 h-9 bg-white/5" />
+            </div>
+          </div>
+        </div>
+
+        {/* Links Skeleton */}
+        <div className="w-full h-14 border border-white/15 bg-[#0b0c14] p-3 flex items-center justify-around animate-pulse">
+          <div className="w-24 h-4 bg-white/10" />
+          <div className="w-24 h-4 bg-white/10" />
+          <div className="w-24 h-4 bg-white/10" />
+          <div className="w-24 h-4 bg-white/10" />
+        </div>
+
+        {/* Grid Stats Skeleton */}
+        <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-4 border border-white/15 bg-[#08090e] p-5">
+          <div className="flex flex-col gap-3 p-4 border border-white/10 bg-[#0e101c] animate-pulse">
+            <div className="w-36 h-5 bg-white/10" />
+            <div className="w-full h-16 bg-white/5" />
+          </div>
+          <div className="flex flex-col gap-3 p-4 border border-white/10 bg-[#0e101c] animate-pulse">
+            <div className="w-36 h-5 bg-white/10" />
+            <div className="w-full h-16 bg-white/5" />
+          </div>
+          <div className="flex flex-col gap-3 p-4 border border-white/10 bg-[#0e101c] animate-pulse">
+            <div className="w-36 h-5 bg-white/10" />
+            <div className="w-full h-16 bg-white/5" />
+          </div>
+        </div>
+
+        {/* Portfolio / Awards Skeleton Cards */}
+        <div className="w-full border border-white/15 bg-[#0b0c14] p-6 flex flex-col gap-4">
+          <div className="w-48 h-5 bg-white/10 animate-pulse" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array.from({ length: 3 }).map((_, idx) => (
+              <div key={idx} className="border border-white/10 bg-[#0e101c] p-4 flex flex-col gap-3 animate-pulse">
+                <div className="w-full h-40 bg-white/5" />
+                <div className="w-32 h-4 bg-white/10" />
+                <div className="w-full h-8 bg-white/5" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -243,7 +306,7 @@ export default function UserDetails({ username: propUsername }) {
 
       {
         user?.leetcode_username && (
-          <LeetCodeStats leetcodeLoading={leetcodeLoading} leetcodeStats={leetcodeStats} />
+          <LeetCodeStats userId={user?.id} leetcodeUsername={user?.leetcode_username} />
         )
       }
 

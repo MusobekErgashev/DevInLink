@@ -1,7 +1,46 @@
 import { Code2, ExternalLink, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import api from "@/api/axios";
 
-export default function LeetCodeStats({ leetcodeStats, leetcodeLoading }) {
+export default function LeetCodeStats({ userId, leetcodeUsername, leetcodeStats: initialStats, leetcodeLoading: initialLoading }) {
+    const [leetcodeStats, setLeetcodeStats] = useState(initialStats || null)
+    const [loading, setLoading] = useState(initialLoading ?? Boolean(userId && !initialStats))
+
+    useEffect(() => {
+        if (initialStats) {
+            setLeetcodeStats(initialStats)
+            setLoading(false)
+            return
+        }
+
+        if (!userId) {
+            setLoading(false)
+            return
+        }
+
+        let isMounted = true
+        async function fetchLeetcode() {
+            try {
+                setLoading(true)
+                const res = await api.get(`leetcode/user/${userId}`)
+                if (res.status === 200 && isMounted) {
+                    setLeetcodeStats(res.data)
+                }
+            } catch (err) {
+                if (isMounted) setLeetcodeStats(null)
+            } finally {
+                if (isMounted) setLoading(false)
+            }
+        }
+        fetchLeetcode()
+        return () => {
+            isMounted = false
+        }
+    }, [userId, initialStats])
+
+    const activeUsername = leetcodeStats?.leetcode_username || leetcodeUsername
+
     return (
         <section className="w-full border-x border-b border-white/15 bg-[#0b0c14] p-5 sm:p-6 flex flex-col gap-5 font-mono">
             <div className="flex flex-wrap items-center justify-between border-b border-white/12 pb-4 gap-3">
@@ -14,9 +53,9 @@ export default function LeetCodeStats({ leetcodeStats, leetcodeLoading }) {
                             <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-white">
                                 LEETCODE STATS
                             </h2>
-                            {leetcodeStats?.leetcode_username && (
+                            {activeUsername && (
                                 <span className="text-[11px] text-amber-400 font-semibold">
-                                    @{leetcodeStats.leetcode_username}
+                                    @{activeUsername}
                                 </span>
                             )}
                         </div>
@@ -26,9 +65,9 @@ export default function LeetCodeStats({ leetcodeStats, leetcodeLoading }) {
                     </div>
                 </div>
 
-                {leetcodeStats?.leetcode_username && (
+                {activeUsername && (
                     <Link
-                        href={`https://leetcode.com/u/${leetcodeStats.leetcode_username}`}
+                        href={`https://leetcode.com/u/${activeUsername}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs transition-colors"
@@ -39,7 +78,7 @@ export default function LeetCodeStats({ leetcodeStats, leetcodeLoading }) {
                 )}
             </div>
 
-            {leetcodeLoading ? (
+            {loading ? (
                 <div className="p-8 border border-dashed border-white/10 text-center text-slate-400 text-xs animate-pulse">
                     LEETCODE STATISTIKASI YUKLANMOQDA...
                 </div>

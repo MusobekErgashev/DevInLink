@@ -3,38 +3,38 @@ const supabase = require('../config/supabase');
 
 class UserController {
     async getMe(req, res) {
-        const userQuery = await pool.query('SELECT * FROM users WHERE id = $1', [req.user.id]);
+        try {
+            const userQuery = await pool.query('SELECT * FROM users WHERE id = $1', [req.user.id]);
 
-        const result = await Promise.all(
-            userQuery.rows.map(async (user) => {
-                const userData = { ...user };
-                delete userData.password_hash;
+            if (userQuery.rows.length === 0) {
+                return res.status(404).json({ message: "Foydalanuvchi topilmadi!" });
+            }
 
-                const educationQuery = await pool.query(
-                    'SELECT * FROM education WHERE user_id = $1 ORDER BY id ASC',
-                    [userData.id]
-                );
+            const result = await Promise.all(
+                userQuery.rows.map(async (user) => {
+                    const userData = { ...user };
+                    delete userData.password_hash;
 
-                const experienceQuery = await pool.query(
-                    'SELECT * FROM experience WHERE user_id = $1 ORDER BY id ASC',
-                    [userData.id]
-                );
+                    const [educationQuery, experienceQuery, technologiesQuery] = await Promise.all([
+                        pool.query('SELECT * FROM education WHERE user_id = $1 ORDER BY id ASC', [userData.id]),
+                        pool.query('SELECT * FROM experience WHERE user_id = $1 ORDER BY id ASC', [userData.id]),
+                        pool.query('SELECT * FROM technologies WHERE user_id = $1 ORDER BY id ASC', [userData.id])
+                    ]);
 
-                const technologiesQuery = await pool.query(
-                    'SELECT * FROM technologies WHERE user_id = $1 ORDER BY id ASC',
-                    [userData.id]
-                );
+                    return {
+                        ...userData,
+                        education: educationQuery.rows,
+                        experience: experienceQuery.rows,
+                        technologies: technologiesQuery.rows
+                    };
+                })
+            );
 
-                return {
-                    ...userData,
-                    education: educationQuery.rows,
-                    experience: experienceQuery.rows,
-                    technologies: technologiesQuery.rows
-                };
-            })
-        );
-
-        res.json(result)
+            res.json(result);
+        } catch (error) {
+            console.error("getMe error:", error);
+            res.status(500).json({ message: "Serverda xatolik yuz berdi!" });
+        }
     }
 
     async updateMe(req, res) {
@@ -117,20 +117,11 @@ class UserController {
                     const userData = { ...user };
                     delete userData.password_hash;
 
-                    const educationQuery = await pool.query(
-                        'SELECT * FROM education WHERE user_id = $1 ORDER BY start_date DESC',
-                        [userData.id]
-                    );
-
-                    const experienceQuery = await pool.query(
-                        'SELECT * FROM experience WHERE user_id = $1 ORDER BY start_date DESC',
-                        [userData.id]
-                    );
-
-                    const technologiesQuery = await pool.query(
-                        'SELECT * FROM technologies WHERE user_id = $1 ORDER BY name ASC',
-                        [userData.id]
-                    );
+                    const [educationQuery, experienceQuery, technologiesQuery] = await Promise.all([
+                        pool.query('SELECT * FROM education WHERE user_id = $1 ORDER BY start_date DESC', [userData.id]),
+                        pool.query('SELECT * FROM experience WHERE user_id = $1 ORDER BY start_date DESC', [userData.id]),
+                        pool.query('SELECT * FROM technologies WHERE user_id = $1 ORDER BY name ASC', [userData.id])
+                    ]);
 
                     return {
                         ...userData,

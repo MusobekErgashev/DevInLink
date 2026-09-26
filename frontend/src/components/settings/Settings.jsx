@@ -5,7 +5,10 @@ import { useEffect, useState } from 'react';
 import api from '@/api/axios';
 import { toast } from 'react-hot-toast';
 
+import useUserStore from '@/utils/user.store';
+
 export default function Settings() {
+    const { fetchUser: fetchCurrentUser } = useUserStore();
     // Accordion visibility states
     const [openAccount, setOpenAccount] = useState(true);
     const [openTechnologies, setOpenTechnologies] = useState(false);
@@ -114,11 +117,11 @@ export default function Settings() {
         }
     };
 
-    const fetchUserData = async () => {
+    const fetchUserData = async (force = false) => {
         try {
             setLoading(true);
-            const res = await api.get("users/me");
-            const userData = Array.isArray(res.data) ? res.data[0] : res.data;
+            const resData = await fetchCurrentUser(force);
+            const userData = Array.isArray(resData) ? resData[0] : resData;
 
             if (userData) {
                 setUsername(userData.username || "");
@@ -159,7 +162,7 @@ export default function Settings() {
             }
         } catch (err) {
             console.error("Error fetching user settings:", err);
-            toast.error(err.response?.data?.message || "Foydalanuvchi ma'lumotlarini yuklashda xatolik");
+            toast.error("Foydalanuvchi ma'lumotlarini yuklashda xatolik");
         } finally {
             setLoading(false);
         }
@@ -711,9 +714,20 @@ export default function Settings() {
 
     if (loading) {
         return (
-            <div className="w-full flex items-center justify-center p-12 text-slate-400 font-mono text-sm">
-                <Loader2 className="w-6 h-6 animate-spin mr-2 text-blue-400" />
-                SOZLAMALAR YUKLANMOQDA...
+            <div className="w-full flex flex-col gap-4 font-mono pb-24 text-slate-200">
+                {Array.from({ length: 4 }).map((_, idx) => (
+                    <div key={idx} className="bg-[#0e101c] border border-white/12 p-6 flex flex-col gap-4 animate-pulse">
+                        <div className="flex justify-between items-center border-b border-white/10 pb-4">
+                            <div className="w-48 h-5 bg-white/10" />
+                            <div className="w-5 h-5 bg-white/5" />
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div className="h-10 bg-white/5 border border-white/10" />
+                            <div className="h-10 bg-white/5 border border-white/10" />
+                            <div className="h-10 bg-white/5 border border-white/10" />
+                        </div>
+                    </div>
+                ))}
             </div>
         );
     }

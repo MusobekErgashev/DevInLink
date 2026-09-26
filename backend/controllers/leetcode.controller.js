@@ -1,9 +1,20 @@
 const axios = require('axios');
 const pool = require('../config/db');
 
+const leetcodeCache = new Map();
+const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutlik kesh
+
 class LeetcodeController {
-    // 1. LeetCode GraphQL API'dan statistikani yuklab olish funksiyasi
+    // 1. LeetCode GraphQL API'dan statistikani yuklab olish funksiyasi (Kesh bilan)
     async fetchLeetcodeFromGraphQL(leetcodeUsername) {
+        if (!leetcodeUsername) return null;
+        const cacheKey = leetcodeUsername.toLowerCase().trim();
+        const cached = leetcodeCache.get(cacheKey);
+
+        if (cached && (Date.now() - cached.timestamp < CACHE_TTL_MS)) {
+            return cached.data;
+        }
+
         const graphqlQuery = {
             query: `
                 query getUserProfile($username: String!) {
@@ -32,7 +43,7 @@ class LeetcodeController {
                     'Content-Type': 'application/json',
                     'Referer': 'https://leetcode.com'
                 },
-                timeout: 10000
+                timeout: 8000
             }
         );
 
@@ -49,7 +60,7 @@ class LeetcodeController {
         const hardSolved = stats.find(s => s.difficulty === 'Hard')?.count || 0;
         const ranking = matchedUser.profile?.ranking || 0;
 
-        return {
+        const result = {
             leetcode_username: leetcodeUsername,
             totalSolved,
             easySolved,
@@ -57,6 +68,10 @@ class LeetcodeController {
             hardSolved,
             ranking
         };
+
+        leetcodeCache.set(cacheKey, { data: result, timestamp: Date.now() });
+
+        return result;
     }
 
     // 2. GET controller - user_id bo'yicha leetcode_username'ni bazadan topib statistikani qaytarish

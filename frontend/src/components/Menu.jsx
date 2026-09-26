@@ -9,13 +9,15 @@ import React, { useEffect, useState } from 'react'
 import useMenuStore from '@/utils/menu.store'
 import api from '@/api/axios'
 import WarningModal from './WarningModal'
+import useUserStore from '@/utils/user.store'
 
 const Menu = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { toggleMenu, isOpen, setIsOpen } = useMenuStore();
+  const { user, fetchUser, clearUser } = useUserStore();
+  const isLoggedIn = !!user;
 
   useEffect(() => {
     const handleResize = () => {
@@ -46,20 +48,8 @@ const Menu = () => {
   }, [pathname, setIsOpen]);
 
   useEffect(() => {
-    async function checkAuth() {
-      try {
-        const res = await api.get('users/me', { skipAuthRedirect: true });
-        if (res.data) {
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
-        }
-      } catch (error) {
-        setIsLoggedIn(false);
-      }
-    }
-    checkAuth();
-  }, []);
+    fetchUser();
+  }, [fetchUser]);
 
   const handleLogout = async () => {
     try {
@@ -67,7 +57,7 @@ const Menu = () => {
     } catch (error) {
       console.error('Logout error:', error)
     }
-    setIsLoggedIn(false)
+    clearUser();
     router.push('/auth')
   }
 

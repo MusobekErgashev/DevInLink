@@ -1,7 +1,7 @@
 'use client'
 
 import api from '@/api/axios';
-import { ArrowRight, AtSign, EyeOff, Lock, Mail, Sparkles, Terminal, User, Zap } from 'lucide-react';
+import { ArrowRight, AtSign, EyeOff, Loader2, Lock, Mail, Sparkles, Terminal, User, Zap } from 'lucide-react';
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 import { useState } from 'react'
@@ -16,6 +16,7 @@ const Auth = () => {
     const [lastName, setLastName] = useState("");
     const [password, setPassword] = useState("");
     const [loginInput, setLoginInput] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const [error, setError] = useState("");
 
@@ -24,6 +25,7 @@ const Auth = () => {
     const handleAuth = async (e) => {
         e.preventDefault();
         setError("");
+        setLoading(true);
 
         try {
             if (page === "register") {
@@ -49,6 +51,8 @@ const Auth = () => {
             }
         } catch (err) {
             setError(err?.response?.data?.message)
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -247,10 +251,11 @@ const Auth = () => {
                             {/* Asosiy Yuborish Tugmasi */}
                             <button
                                 type="submit"
-                                className="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 group cursor-pointer mt-2"
+                                disabled={loading}
+                                className={`${loading ? "cursor-not-allowed opacity-70" : "cursor-pointer"} w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 group mt-2`}
                             >
                                 <span>{page === "register" ? `Ro'yxatdan o'tish` : "Kirish"}</span>
-                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
                             </button>
                         </form>
 

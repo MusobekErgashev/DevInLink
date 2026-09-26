@@ -91,8 +91,14 @@ export default function PortfolioStats({ username, formatDate }) {
 
             {/* Content */}
             {loading ? (
-                <div className="border border-dashed border-white/10 p-6 text-center text-slate-500 text-xs font-mono">
-                    PORTFOLIO YUKLANMOQDA...
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                    {Array.from({ length: 3 }).map((_, idx) => (
+                        <div key={idx} className="border border-white/10 bg-[#0e101c] p-4 flex flex-col gap-3 animate-pulse">
+                            <div className="w-full h-48 bg-white/5" />
+                            <div className="w-32 h-4 bg-white/10" />
+                            <div className="w-full h-10 bg-white/5" />
+                        </div>
+                    ))}
                 </div>
             ) : portfolio.length === 0 ? (
                 <div className="border border-dashed border-white/10 p-6 text-center text-slate-500 text-xs font-mono">

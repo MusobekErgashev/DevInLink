@@ -30,6 +30,7 @@ import { useRouter } from 'next/navigation';
 const Explore = () => {
   const router = useRouter();
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedPhone, setSelectedPhone] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
   const query = useQueryStore((state) => state.query);
@@ -39,12 +40,15 @@ const Explore = () => {
   useEffect(() => {
     async function fetchUsers() {
       try {
+        setLoading(true);
         const res = await api.get(`/users?q=${query}`);
         setUsers(res.data);
         setTotal(res.data.total)
         setError("")
       } catch (error) {
         setError(error.response?.data?.message || "Foydalanuvchilar topilmadi!");
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -91,7 +95,21 @@ const Explore = () => {
   return (
     <div className="w-full text-slate-100 mb-7 sm:mb-15 font-inter">
       <div className="border border-white/8 bg-[#0e101c] divide-y divide-white/10 rounded-xl overflow-hidden shadow-2xl">
-        {error ? <p className="py-5 text-center text-[18px] text-slate-400 font-mono font-bold uppercase flex justify-center items-center gap-2 h-40 leading-none"><HeartCrack size={22} /> <span className='translate-y-0.5'>{error}</span></p> : users.users?.map((user) => {
+        {loading ? (
+          Array.from({ length: 4 }).map((_, idx) => (
+            <div key={idx} className="border-b border-white/20 p-5 flex flex-col sm:flex-row gap-4 items-start animate-pulse bg-[#0e101c]">
+              <div className="w-20 h-20 border border-white/10 bg-white/10 shrink-0" />
+              <div className="flex flex-col gap-3 flex-1 w-full">
+                <div className="w-48 h-5 bg-white/10" />
+                <div className="flex gap-2">
+                  <div className="w-24 h-4 bg-white/5" />
+                  <div className="w-20 h-4 bg-white/5" />
+                </div>
+                <div className="w-full h-8 bg-white/5" />
+              </div>
+            </div>
+          ))
+        ) : error ? <p className="py-5 text-center text-[18px] text-slate-400 font-mono font-bold uppercase flex justify-center items-center gap-2 h-40 leading-none"><HeartCrack size={22} /> <span className='translate-y-0.5'>{error}</span></p> : users.users?.map((user) => {
           const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username || 'Noma\'lum Dasturchi';
           const formattedName = fullName
             .split(' ')

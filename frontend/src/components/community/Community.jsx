@@ -6,13 +6,16 @@ import { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import WarningModal from '../WarningModal'
+import useUserStore from '@/utils/user.store'
 
 const Community = () => {
     const router = useRouter()
     const [messages, setMessages] = useState([])
+    const [loading, setLoading] = useState(true)
     const [copiedId, setCopiedId] = useState(null)
     const [newMessage, setNewMessage] = useState('')
-    const [myAva, setMyAva] = useState({})
+    const { user: currentUser, fetchUser: fetchCurrentUser } = useUserStore()
+    const myAva = currentUser ? { avatar: currentUser.avatar, first_name: currentUser.first_name, id: currentUser.id } : {}
     const [replyingMessage, setReplyingMessage] = useState({})
     const [editingId, setEditingId] = useState(null)
     const [deletingId, setDeletingId] = useState(null)
@@ -23,26 +26,19 @@ const Community = () => {
     useEffect(() => {
         async function getMessages() {
             try {
+                setLoading(true)
                 const res = await api.get('community')
                 setMessages(res.data)
             } catch (error) {
                 console.log(error)
-            }
-        }
-
-        async function getMyAva() {
-            try {
-                const res = await api.get('users/me')
-                const uData = Array.isArray(res.data) ? res.data[0] : res.data
-                setMyAva({ avatar: uData.avatar, first_name: uData.first_name, id: uData.id })
-            } catch (error) {
-                console.log(error)
+            } finally {
+                setLoading(false)
             }
         }
 
         getMessages()
-        getMyAva()
-    }, [])
+        fetchCurrentUser()
+    }, [fetchCurrentUser])
 
     const handleCopy = (text, id) => {
         if (typeof window !== 'undefined' && text) {
@@ -169,7 +165,18 @@ const Community = () => {
 
                 {/* Messages Feed */}
                 <div className="w-full overflow-y-auto flex flex-col gap-3.5 h-[calc(100vh-17rem)] custom-scrollbar">
-                    {messages?.length > 0 ? (
+                    {loading ? (
+                        Array.from({ length: 4 }).map((_, idx) => (
+                            <div key={idx} className="flex gap-3.5 bg-[#0e101c] border border-white/12 p-4 sm:p-5 animate-pulse">
+                                <div className="w-11 h-11 border border-white/10 bg-white/10 shrink-0" />
+                                <div className="flex-1 flex flex-col gap-2.5">
+                                    <div className="w-36 h-4 bg-white/10" />
+                                    <div className="w-full h-12 bg-white/5" />
+                                    <div className="w-24 h-3 bg-white/5 self-end" />
+                                </div>
+                            </div>
+                        ))
+                    ) : messages?.length > 0 ? (
                         messages.map((item) => {
                             const displayName = [item.first_name, item.last_name].filter(Boolean).join(' ') || item.username || 'User'
                             const initial = (item.first_name?.[0] || item.username?.[0] || 'U').toUpperCase()
