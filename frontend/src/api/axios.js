@@ -1,8 +1,18 @@
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
 
+const getBaseURL = () => {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL
+  }
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://devinlink.onrender.com/api'
+  }
+  return 'http://localhost:8000/api'
+}
+
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api',
+  baseURL: getBaseURL(),
   headers: { 'Content-Type': 'application/json' },
   timeout: 15000,
   withCredentials: true,
