@@ -8,86 +8,76 @@ class AuthController {
     // register
 
     async register(req, res) {
-        try {
-            const validationResult = authValidate.register.validate(req.body);
+        const validationResult = authValidate.register.validate(req.body);
 
-            if (validationResult.error) {
-                return res.status(400).json({ message: validationResult.error.message });
-            }
-
-            const { username, first_name, last_name, email, password_hash } = req.body;
-
-            if (!username || !first_name || !last_name || !email || !password_hash) {
-                return res.status(400).json({ message: "Barcha maydonlar to'ldirilishi shart!" });
-            }
-
-            const userExist = await pool.query('SELECT * FROM users WHERE email = $1 or username = $2', [email, username]);
-
-            if (userExist.rows.length > 0) {
-                return res.status(400).json({ message: "Bu foydalanuvchi allaqachon ro'yxatdan o'tgan!" });
-            }
-
-            const newUser = await pool.query("INSERT INTO users (username, first_name, last_name, email, password_hash) VALUES ($1, $2, $3, $4, $5) RETURNING *", [
-                username, first_name, last_name, email, await hashPassword(password_hash)
-            ]);
-
-            const userData = newUser.rows[0];
-            delete userData.password_hash;
-
-            const accessToken = generateAccessToken(userData.id);
-            const refreshToken = generateRefreshToken(userData.id);
-
-            res.cookie('accessToken', accessToken, accessTokenCookieOptions);
-            res.cookie('refreshToken', refreshToken, refreshTokenCookieOptions);
-
-            res.status(201).json({ message: `"${userData.username}" foydalanuvchi tizimdan muvaffaqiyatli ro'yxatdan o'tdi!` });
-        } catch (error) {
-            console.error("register error:", error);
-            res.status(500).json({ message: "Serverda xatolik yuz berdi!", error: error.message });
+        if (validationResult.error) {
+            return res.status(400).json({ message: validationResult.error.message });
         }
+
+        const { username, first_name, last_name, email, password_hash } = req.body;
+
+        if (!username || !first_name || !last_name || !email || !password_hash) {
+            return res.status(400).json({ message: "Barcha maydonlar to'ldirilishi shart!" });
+        }
+
+        const userExist = await pool.query('SELECT * FROM users WHERE email = $1 or username = $2', [email, username]);
+
+        if (userExist.rows.length > 0) {
+            return res.status(400).json({ message: "Bu foydalanuvchi allaqachon ro'yxatdan o'tgan!" });
+        }
+
+        const newUser = await pool.query("INSERT INTO users (username, first_name, last_name, email, password_hash) VALUES ($1, $2, $3, $4, $5) RETURNING *", [
+            username, first_name, last_name, email, await hashPassword(password_hash)
+        ]);
+
+        const userData = newUser.rows[0];
+        delete userData.password_hash;
+
+        const accessToken = generateAccessToken(userData.id);
+        const refreshToken = generateRefreshToken(userData.id);
+
+        res.cookie('accessToken', accessToken, accessTokenCookieOptions);
+        res.cookie('refreshToken', refreshToken, refreshTokenCookieOptions);
+
+        res.status(201).json({ message: `"${userData.username}" foydalanuvchi tizimdan muvaffaqiyatli ro'yxatdan o'tdi!` });
     }
 
     // login
 
     async login(req, res) {
-        try {
-            const { username, email, password_hash } = req.body;
+        const { username, email, password_hash } = req.body;
 
-            if (!username && !email) {
-                return res.status(400).json({ message: "Email yoki username kiriting!" });
-            }
-
-            if (!password_hash) {
-                return res.status(400).json({ message: "Parol kiriting!" });
-            }
-
-            const user = await pool.query("SELECT * FROM users WHERE email = $1 OR username = $2", [email, username]);
-
-            if (user.rows.length === 0) {
-                return res.status(400).json({ message: "Login yoki parol noto'g'ri!" });
-            }
-
-            const userData = user.rows[0];
-
-            const isMatch = await comparePassword(password_hash, userData.password_hash);
-
-            delete userData.password_hash;
-
-            if (!isMatch) {
-                return res.status(400).json({ message: "Login yoki parol noto'g'ri!" });
-            }
-
-            const accessToken = generateAccessToken(userData.id);
-            const refreshToken = generateRefreshToken(userData.id);
-
-            res.cookie('accessToken', accessToken, accessTokenCookieOptions);
-            res.cookie('refreshToken', refreshToken, refreshTokenCookieOptions);
-
-            res.status(200).json({ message: `"${userData.username}" foydalanuvchi tizimga muvaffaqiyatli kirdi!` });
-        } catch (error) {
-            console.error("login error:", error);
-            res.status(500).json({ message: "Serverda xatolik yuz berdi!", error: error.message });
+        if (!username && !email) {
+            return res.status(400).json({ message: "Email yoki username kiriting!" });
         }
+
+        if (!password_hash) {
+            return res.status(400).json({ message: "Parol kiriting!" });
+        }
+
+        const user = await pool.query("SELECT * FROM users WHERE email = $1 OR username = $2", [email, username]);
+
+        if (user.rows.length === 0) {
+            return res.status(400).json({ message: "Login yoki parol noto'g'ri!" });
+        }
+
+        const userData = user.rows[0];
+
+        const isMatch = await comparePassword(password_hash, userData.password_hash);
+
+        delete userData.password_hash;
+
+        if (!isMatch) {
+            return res.status(400).json({ message: "Login yoki parol noto'g'ri!" });
+        }
+
+        const accessToken = generateAccessToken(userData.id);
+        const refreshToken = generateRefreshToken(userData.id);
+
+        res.cookie('accessToken', accessToken, accessTokenCookieOptions);
+        res.cookie('refreshToken', refreshToken, refreshTokenCookieOptions);
+
+        res.status(200).json({ message: `"${userData.username}" foydalanuvchi tizimga muvaffaqiyatli kirdi!` });
     }
 
     // delete account
