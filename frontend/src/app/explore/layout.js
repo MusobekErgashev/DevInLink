@@ -34,10 +34,6 @@ function SearchHeader() {
           )}
         </div>
       </div>
-
-      <div className="flex ml-2 items-center gap-2 z-10 bg-white/5 border h-full border-white/12 p-2 px-4">
-        <SlidersHorizontal className="w-3.5 h-3.5 text-indigo-400" />
-      </div>
     </div>
   );
 }

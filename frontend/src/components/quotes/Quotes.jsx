@@ -243,7 +243,7 @@ export default function Quotes() {
             const diffHours = Math.floor(diffMinutes / 60)
             if (diffHours < 24) return `${diffHours} soat oldin`
 
-            return d.toLocaleDateString('uz-UZ', { month: 'short', day: 'numeric', year: 'numeric' })
+            return d.toLocaleDateString('uz-UZ', { month: '2-digit', day: 'numeric', year: 'numeric' })
         } catch {
             return dateStr
         }
